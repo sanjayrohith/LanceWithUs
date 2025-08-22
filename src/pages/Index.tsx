@@ -1,12 +1,33 @@
-// Update this page (the content is just a fallback if you fail to update the page)
+import { Navigation } from "@/components/Navigation";
+import { HeroSection } from "@/components/sections/HeroSection";
+import { AboutSection } from "@/components/sections/AboutSection";
+import { ServicesSection } from "@/components/sections/ServicesSection";
+import { PortfolioSection } from "@/components/sections/PortfolioSection";
+import { ProcessSection } from "@/components/sections/ProcessSection";
+import { ContactSection } from "@/components/sections/ContactSection";
+import { FloatingChat } from "@/components/FloatingChat";
 
 const Index = () => {
   return (
-    <div className="min-h-screen flex items-center justify-center bg-background">
-      <div className="text-center">
-        <h1 className="text-4xl font-bold mb-4">Welcome to Your Blank App</h1>
-        <p className="text-xl text-muted-foreground">Start building your amazing project here!</p>
-      </div>
+    <div className="min-h-screen bg-background text-foreground">
+      <Navigation />
+      
+      <main>
+        <HeroSection />
+        <AboutSection />
+        <ServicesSection />
+        <PortfolioSection />
+        <ProcessSection />
+        <ContactSection />
+      </main>
+
+      <footer className="bg-background/30 border-t border-white/10">
+        <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-6 text-center text-muted-foreground">
+          <p>&copy; 2024 Stellar Solutions. All rights reserved. Built by students, for the future.</p>
+        </div>
+      </footer>
+
+      <FloatingChat />
     </div>
   );
 };
