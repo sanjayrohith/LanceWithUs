@@ -1,5 +1,7 @@
 import { motion } from "framer-motion";
 import { Code2, Smartphone, BrainCircuit, Figma } from "lucide-react";
+import { MotionBlurCard } from "@/components/animations/MotionBlurCard";
+import { StaggeredText } from "@/components/animations/StaggeredText";
 
 const services = [
   {
@@ -44,7 +46,10 @@ export const ServicesSection = () => {
           className="text-center mb-12"
         >
           <h2 className="text-3xl md:text-4xl font-bold text-foreground">
-            What We <span className="text-accent">Offer</span>
+            <StaggeredText text="What We " delay={0.2} animationType="slide" />
+            <span className="text-accent">
+              <StaggeredText text="Offer" delay={0.4} animationType="scale" />
+            </span>
           </h2>
           <p className="mt-4 text-lg text-muted-foreground">
             Crafting solutions for the modern web.
@@ -55,23 +60,20 @@ export const ServicesSection = () => {
           {services.map((service, index) => {
             const Icon = service.icon;
             return (
-              <motion.div
+              <MotionBlurCard
                 key={service.title}
-                initial={{ opacity: 0, y: 30 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.6, delay: index * 0.1 }}
-                viewport={{ once: true }}
-                whileHover={{ y: -8 }}
-                className={`glass-card p-6 rounded-xl transition-all duration-300 cursor-pointer ${service.hoverColor}`}
+                delay={index * 0.1}
+                direction={index % 2 === 0 ? 'up' : 'down'}
+                className={`p-6 cursor-pointer ${service.hoverColor}`}
               >
-                <Icon className={`w-10 h-10 ${service.color} mb-4`} />
+                <Icon className={`w-10 h-10 ${service.color} mb-4 transition-transform duration-300 group-hover:scale-110`} />
                 <h3 className="text-xl font-bold text-foreground mb-2">
                   {service.title}
                 </h3>
                 <p className="text-muted-foreground text-sm leading-relaxed">
                   {service.description}
                 </p>
-              </motion.div>
+              </MotionBlurCard>
             );
           })}
         </div>

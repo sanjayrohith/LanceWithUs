@@ -2,6 +2,8 @@ import { motion } from "framer-motion";
 import teamAlex from "@/assets/team-alex.jpg";
 import teamSamantha from "@/assets/team-samantha.jpg";
 import teamMike from "@/assets/team-mike.jpg";
+import { MotionBlurCard } from "@/components/animations/MotionBlurCard";
+import { StaggeredText } from "@/components/animations/StaggeredText";
 
 const teamMembers = [
   {
@@ -42,8 +44,14 @@ export const AboutSection = () => {
           className="text-center mb-12"
         >
           <h2 className="text-3xl md:text-4xl font-bold text-foreground">
-            From <span className="text-primary">Classrooms</span> to{" "}
-            <span className="text-accent">Clients</span>
+            <StaggeredText text="From " delay={0.2} animationType="slide" />
+            <span className="text-primary">
+              <StaggeredText text="Classrooms" delay={0.4} animationType="scale" />
+            </span>
+            <StaggeredText text=" to " delay={0.6} animationType="slide" />
+            <span className="text-accent">
+              <StaggeredText text="Clients" delay={0.8} animationType="rotate" />
+            </span>
           </h2>
           <p className="mt-4 text-lg text-muted-foreground">
             Our journey as student freelancers.
@@ -52,14 +60,11 @@ export const AboutSection = () => {
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
           {teamMembers.map((member, index) => (
-            <motion.div
+            <MotionBlurCard
               key={member.name}
-              initial={{ opacity: 0, y: 30 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.6, delay: index * 0.1 }}
-              viewport={{ once: true }}
-              whileHover={{ y: -10 }}
-              className="glass-card rounded-2xl p-6 text-center group cursor-pointer"
+              delay={index * 0.1}
+              direction={index % 2 === 0 ? 'up' : 'down'}
+              className="p-6 text-center group cursor-pointer"
             >
               <div className="relative mb-4">
                 <img
@@ -78,7 +83,7 @@ export const AboutSection = () => {
               <p className="text-muted-foreground text-sm leading-relaxed">
                 {member.description}
               </p>
-            </motion.div>
+            </MotionBlurCard>
           ))}
         </div>
       </div>

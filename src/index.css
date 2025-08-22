@@ -175,4 +175,39 @@
   .animation-delay-600 {
     animation-delay: 600ms;
   }
+  
+  /* Motion blur utilities */
+  .blur-enter {
+    filter: blur(10px);
+    opacity: 0;
+    transform: scale(0.8);
+  }
+  
+  .blur-exit {
+    filter: blur(0px);
+    opacity: 1;
+    transform: scale(1);
+  }
+  
+  /* Magnetic hover preparation */
+  .magnetic {
+    will-change: transform;
+    transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+  
+  /* Enhanced glass morphism with motion */
+  .glass-card-enhanced {
+    background: rgba(255, 255, 255, 0.05);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+  
+  .glass-card-enhanced:hover {
+    background: rgba(255, 255, 255, 0.08);
+    border-color: rgba(255, 255, 255, 0.2);
+    backdrop-filter: blur(30px);
+    -webkit-backdrop-filter: blur(30px);
+  }
 }

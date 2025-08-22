@@ -2,6 +2,8 @@ import { Button } from "@/components/ui/button";
 import { ParticleBackground } from "@/components/ParticleBackground";
 import { TypedText } from "@/components/TypedText";
 import { motion } from "framer-motion";
+import { StaggeredText } from "@/components/animations/StaggeredText";
+import { MagneticButton } from "@/components/animations/MagneticButton";
 
 export const HeroSection = () => {
   const scrollToSection = (id: string) => {
@@ -30,10 +32,24 @@ export const HeroSection = () => {
           transition={{ duration: 0.8, delay: 0.2 }}
           className="text-4xl md:text-6xl lg:text-7xl font-black text-foreground mb-6 leading-tight"
         >
-          We Build{" "}
-          <span className="text-primary">Smart, Modern</span>
+          <StaggeredText 
+            text="We Build " 
+            delay={0.5}
+            animationType="slide"
+          />
+          <span className="text-primary">
+            <StaggeredText 
+              text="Smart, Modern" 
+              delay={0.8}
+              animationType="scale"
+            />
+          </span>
           <br />
-          Solutions for{" "}
+          <StaggeredText 
+            text="Solutions for " 
+            delay={1.1}
+            animationType="slide"
+          />
           <TypedText
             strings={["Your Ideas.", "Your Business.", "Your Future."]}
             className="text-accent"
@@ -55,21 +71,22 @@ export const HeroSection = () => {
           transition={{ duration: 0.8, delay: 0.6 }}
           className="flex justify-center gap-4 flex-wrap"
         >
-          <Button
+          <MagneticButton 
             onClick={() => scrollToSection("contact")}
-            size="lg"
-            className="neon-glow bg-primary text-primary-foreground hover:bg-primary/90 font-semibold px-8 py-6 text-lg transform hover:scale-105 transition-all duration-300"
+            variant="primary"
+            strength={0.2}
+            className="font-semibold text-lg px-8 py-6"
           >
             Hire Us
-          </Button>
-          <Button
+          </MagneticButton>
+          <MagneticButton 
             onClick={() => scrollToSection("portfolio")}
-            variant="outline"
-            size="lg"
-            className="glass-card border-white/20 text-foreground hover:bg-white/10 font-semibold px-8 py-6 text-lg transform hover:scale-105 transition-all duration-300"
+            variant="glass"
+            strength={0.2}
+            className="font-semibold text-lg px-8 py-6"
           >
             Get a Quote
-          </Button>
+          </MagneticButton>
         </motion.div>
       </motion.div>
     </section>

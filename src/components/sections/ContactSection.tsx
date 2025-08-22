@@ -4,6 +4,8 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { useToast } from "@/hooks/use-toast";
 import { useState } from "react";
+import { MagneticButton } from "@/components/animations/MagneticButton";
+import { StaggeredText } from "@/components/animations/StaggeredText";
 
 export const ContactSection = () => {
   const { toast } = useToast();
@@ -70,7 +72,10 @@ Looking forward to hearing from you.`;
           className="text-center mb-12"
         >
           <h2 className="text-3xl md:text-4xl font-bold text-foreground">
-            Let's <span className="text-primary">Talk</span>
+            <StaggeredText text="Let's " delay={0.2} animationType="slide" />
+            <span className="text-primary">
+              <StaggeredText text="Talk" delay={0.4} animationType="scale" />
+            </span>
           </h2>
           <p className="mt-4 text-lg text-muted-foreground">
             Have a project in mind? We'd love to hear about it.
@@ -131,7 +136,7 @@ Looking forward to hearing from you.`;
               <Button
                 type="submit"
                 size="lg"
-                className="neon-glow bg-primary text-primary-foreground hover:bg-primary/90 font-semibold px-8 transform hover:scale-105 transition-all duration-300"
+                className="neon-glow bg-primary text-primary-foreground hover:bg-primary/90 font-semibold px-8 py-6 text-lg transform hover:scale-105 transition-all duration-300 magnetic"
               >
                 Get in Touch
               </Button>
