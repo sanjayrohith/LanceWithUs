@@ -1,8 +1,10 @@
-import { motion } from "framer-motion";
+import { motion, useAnimate } from "framer-motion";
+import { useEffect, useRef } from "react";
 import teamAlex from "@/assets/team-alex.jpg";
+import teamrohit from "@/assets/team-rohith.jpeg"
 import teamSamantha from "@/assets/team-samantha.jpg";
 import teamsandeep from "@/assets/team-sandep.jpg";
-import teamMike from "@/assets/team-mike.jpg"; // Assuming this is the image for Abishek Raj
+import teamMike from "@/assets/team-mike.jpg";
 import { MotionBlurCard } from "@/components/animations/MotionBlurCard";
 import { StaggeredText } from "@/components/animations/StaggeredText";
 
@@ -13,7 +15,7 @@ const teamMembers = [
     color: "border-primary/50",
     roleColor: "text-primary",
     description: "The architect of our digital dreams. Fueled by coffee and a passion for clean code.",
-    image: teamAlex,
+    image: teamrohit,
     linkedinUrl: "https://www.linkedin.com/in/sanjayrohith18/",
   },
   {
@@ -40,18 +42,60 @@ const teamMembers = [
     color: "border-stellar-pink/50",
     roleColor: "text-stellar-pink",
     description: "Our resident genius, teaching machines to think so you don't have to.",
-    image: teamMike, // Make sure to change this if you have a specific image for Abishek
+    image: teamMike,
     linkedinUrl: "https://www.linkedin.com/in/abishek-raj-a2aa39318/",
   }
 ];
 
 export const AboutSection = () => {
+  const [scope, animate] = useAnimate();
+  const currentIndexRef = useRef(0);
+  const intervalRef = useRef(null);
+
+  useEffect(() => {
+    const slider = scope.current;
+    if (!slider || slider.children.length === 0) return;
+
+    const startAutoScroll = () => {
+        intervalRef.current = setInterval(() => {
+        currentIndexRef.current = (currentIndexRef.current + 1) % teamMembers.length;
+        
+        const cardWidth = slider.children[0].offsetWidth;
+        const gap = 32;
+
+        const nextScrollLeft = currentIndexRef.current * (cardWidth + gap);
+
+        animate(
+          slider, 
+          { scrollLeft: nextScrollLeft }, 
+          { duration: 0.7, ease: "easeInOut" }
+        );
+      }, 3000);
+    };
+
+    const stopAutoScroll = () => {
+      clearInterval(intervalRef.current);
+    };
+
+    startAutoScroll();
+
+    slider.addEventListener('mousedown', stopAutoScroll);
+    slider.addEventListener('touchstart', stopAutoScroll);
+    slider.addEventListener('wheel', stopAutoScroll);
+
+    return () => {
+      stopAutoScroll();
+      slider.removeEventListener('mousedown', stopAutoScroll);
+      slider.removeEventListener('touchstart', stopAutoScroll);
+      slider.removeEventListener('wheel', stopAutoScroll);
+    };
+  }, [animate, scope]);
+
   return (
     <section id="about" className="py-20 sm:py-32 overflow-hidden">
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-16 items-center">
           
-          {/* LEFT COLUMN: Text Content */}
           <motion.div
             initial={{ opacity: 0, x: -30 }}
             whileInView={{ opacity: 1, x: 0 }}
@@ -74,14 +118,15 @@ export const AboutSection = () => {
             </p>
           </motion.div>
 
-          {/* RIGHT COLUMN: Horizontal Slider */}
           <div className="relative w-full">
             <div 
-              className="flex overflow-x-auto space-x-8 py-4 snap-x snap-mandatory"
-              style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
+              ref={scope}
+              // Removed snap-x and snap-mandatory to prevent conflict with the animation
+              className="flex overflow-x-auto space-x-8 py-4"
+              style={{ scrollbarWidth: 'none', '-ms-overflow-style': 'none' }}
             >
               {teamMembers.map((member, index) => (
-                <div key={member.name} className="flex-shrink-0 snap-center">
+                <div key={member.name} className="flex-shrink-0">
                   <MotionBlurCard
                     delay={index * 0.1}
                     direction={'up'}
