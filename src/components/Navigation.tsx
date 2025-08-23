@@ -23,7 +23,7 @@ export const Navigation = () => {
     <motion.nav 
       initial={{ opacity: 0, y: -20 }}
       animate={{ opacity: 1, y: 0 }}
-      className="fixed top-6 left-1/2 transform -translate-x-1/2 -ml-56 z-50"
+      className="fixed top-6 left-1/2 transform -translate-x-1/2 -ml-64 z-50"
     >
       <div className="backdrop-blur-xl bg-black/30 border border-white/20 rounded-full px-6 py-2.5 shadow-2xl shadow-black/50">
         <div className="flex items-center justify-center space-x-4">
