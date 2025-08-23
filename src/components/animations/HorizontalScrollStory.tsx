@@ -225,9 +225,9 @@ export const HorizontalScrollStory = ({
       </div>
       
       {/* Scroll indicator */}
-      <div className="absolute bottom-8 left-1/2 transform -translate-x-1/2 text-center">
+      <div className="absolute bottom-8 left-1/2 transform -translate-x-1/2 text-center flex flex-col items-center">
         <p className="text-sm text-muted-foreground mb-2">Scroll to explore</p>
-        <div className="w-6 h-10 border border-white/30 rounded-full flex justify-center">
+        <div className="w-6 h-10 border border-white/30 rounded-full flex justify-center items-start">
           <div className="w-1 h-3 bg-white/60 rounded-full mt-2 animate-bounce" />
         </div>
       </div>
