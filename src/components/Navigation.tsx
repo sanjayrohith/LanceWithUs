@@ -1,61 +1,100 @@
-import { useState } from "react";
+import { useEffect, useState, useMemo } from "react";
 import { motion } from "framer-motion";
 
 export const Navigation = () => {
-  const [activeItem, setActiveItem] = useState("Case Studies");
+  const [activeId, setActiveId] = useState("top");
 
-  const navItems = [
-    { name: "Services", hasIcon: false, id: "services" },
-    { name: "Case Studies", hasIcon: true, id: "portfolio" },
-    { name: "About", hasIcon: false, id: "about" },
-    { name: "Resources", hasIcon: false, id: "process" },
-    { name: "Free Audit", hasIcon: false, id: "contact" }
-  ];
+  const navItems = useMemo(
+    () => [
+      { name: "Home", id: "top" },
+      { name: "Services", id: "services" },
+      { name: "About", id: "about" },
+      { name: "Our Work", id: "portfolio" },
+      { name: "Workflow", id: "process" },
+      { name: "ContactUs", id: "contact" },
+    ],
+    []
+  );
 
-  const scrollToSection = (id: string) => {
-    const element = document.getElementById(id);
-    if (element) {
-      element.scrollIntoView({ behavior: "smooth" });
+  const scrollToSection = (id) => {
+    setActiveId(id);
+    if (id === "top") {
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    } else {
+      const element = document.getElementById(id);
+      if (element) {
+        element.scrollIntoView({ behavior: "smooth" });
+      }
     }
   };
 
+  useEffect(() => {
+    const handleScroll = () => {
+      const scrollPosition = window.scrollY;
+
+      // --- THE DEFINITIVE FIX ---
+      // This logic finds the last section that has scrolled past the top of the viewport,
+      // with a buffer of 1px to ensure accuracy. This is the most reliable way to
+      // determine the "current" section you are viewing.
+      const currentSection = [...navItems].reverse().find(item => {
+          const element = document.getElementById(item.id);
+          if (element) {
+              return element.offsetTop <= scrollPosition + 1;
+          }
+          // The 'top' section doesn't have an element, so we handle it by default.
+          return item.id === 'top'; 
+      });
+
+      if (currentSection) {
+          setActiveId(currentSection.id);
+      }
+      
+      // --- EDGE CASE FIX FOR BOTTOM ---
+      // If the user scrolls to the absolute bottom of the page, force the last item to be active.
+      const isAtBottom = window.innerHeight + window.scrollY >= document.body.offsetHeight - 2;
+      if (isAtBottom) {
+          setActiveId('contact');
+      }
+    };
+
+    window.addEventListener("scroll", handleScroll, { passive: true });
+
+    return () => {
+      window.removeEventListener("scroll", handleScroll);
+    };
+  }, [navItems]);
+
   return (
-    <motion.nav 
-      initial={{ opacity: 0, y: -20 }}
-      animate={{ opacity: 1, y: 0 }}
-      className="fixed top-6 left-1/2 transform -translate-x-1/2 -ml-64 z-50"
-    >
-      <div className="backdrop-blur-xl bg-black/30 border border-white/20 rounded-full px-6 py-2.5 shadow-2xl shadow-black/50">
-        <div className="flex items-center justify-center space-x-4">
+    <nav className="w-full fixed top-6 z-50 flex justify-center">
+      <motion.div
+        initial={{ opacity: 0, y: -20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.5 }}
+        className="backdrop-blur-xl bg-black/30 border border-white/20 rounded-full px-4 py-2 shadow-2xl shadow-black/50"
+      >
+        <div className="flex items-center justify-center space-x-2">
           {navItems.map((item) => (
             <button
-              key={item.name}
-              onClick={() => {
-                setActiveItem(item.name);
-                scrollToSection(item.id);
-              }}
-              className={`relative flex items-center space-x-1.5 px-3 py-2 rounded-full transition-all duration-300 ${
-                activeItem === item.name 
-                  ? 'text-white' 
-                  : 'text-gray-300 hover:text-white'
+              key={item.id}
+              onClick={() => scrollToSection(item.id)}
+              className={`relative px-3 py-1.5 rounded-full text-sm font-medium transition-colors duration-300 ${
+                activeId === item.id
+                  ? "text-white"
+                  : "text-gray-300 hover:text-white"
               }`}
             >
-              {item.hasIcon && (
-                <div className="w-1.5 h-1.5 bg-orange-500 rounded-full shadow-lg shadow-orange-500/50"></div>
-              )}
-              <span className="text-xs font-medium whitespace-nowrap">{item.name}</span>
-              
-              {activeItem === item.name && (
+              <span className="relative z-10">{item.name}</span>
+              {activeId === item.id && (
                 <motion.div
                   layoutId="activeBackground"
-                  className="absolute inset-0 bg-white/15 backdrop-blur-sm rounded-full border border-white/20"
-                  transition={{ type: "spring", bounce: 0.2, duration: 0.6 }}
+                  className="absolute inset-0 bg-white/15 rounded-full"
+                  transition={{ type: "spring", stiffness: 500, damping: 35 }}
                 />
               )}
             </button>
           ))}
         </div>
-      </div>
-    </motion.nav>
+      </motion.div>
+    </nav>
   );
 };
