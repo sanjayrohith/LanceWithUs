@@ -48,7 +48,7 @@ export const ContactSection = () => {
     const name = formData.name || "a potential client";
     const projectInfo = formData.message || "a new project";
     
-    const suggestion = `Hello Stellar Solutions team,
+    const suggestion = `Hello LanceWithUs Solutions team,
 
 My name is ${name}, and I'm writing to you today because I'm interested in discussing a potential project related to ${projectInfo}.
 
@@ -145,7 +145,7 @@ Looking forward to hearing from you.`;
                 variant="ghost"
                 size="sm"
                 onClick={generateMessageSuggestion}
-                className="absolute bottom-3 right-3 text-xs bg-primary/50 text-primary-foreground hover:bg-primary/70 transition-colors"
+                className="absolute bottom-3 right-3 text-xs backdrop-blur-xl bg-black/30 border border-white/20 text-white hover:bg-white/15 hover:border-white/30 transition-all duration-300 rounded-full px-3 py-1.5 shadow-lg"
               >
                 ✨ Help me write
               </Button>
