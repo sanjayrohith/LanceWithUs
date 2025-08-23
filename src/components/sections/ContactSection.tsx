@@ -6,6 +6,7 @@ import { useToast } from "@/hooks/use-toast";
 import { useState } from "react";
 import { MagneticButton } from "@/components/animations/MagneticButton";
 import { StaggeredText } from "@/components/animations/StaggeredText";
+import { GeometricMorph } from "@/components/animations/GeometricMorph";
 
 export const ContactSection = () => {
   const { toast } = useToast();
@@ -62,8 +63,26 @@ Looking forward to hearing from you.`;
   };
 
   return (
-    <section id="contact" className="py-20 sm:py-32 bg-background/20">
-      <div className="container mx-auto px-4 sm:px-6 lg:px-8">
+    <section id="contact" className="py-20 sm:py-32 bg-background/20 relative overflow-hidden">
+      {/* Background geometric shapes */}
+      <div className="absolute top-32 left-20 opacity-25">
+        <GeometricMorph 
+          shapes={['star', 'circle', 'triangle']}
+          size={180}
+          colors={['hsl(var(--primary))', 'hsl(var(--accent))']}
+          duration={10}
+        />
+      </div>
+      <div className="absolute bottom-20 right-32 opacity-20">
+        <GeometricMorph 
+          shapes={['hexagon', 'square', 'star']}
+          size={120}
+          colors={['hsl(var(--stellar-cyan))', 'hsl(var(--stellar-pink))']}
+          duration={12}
+        />
+      </div>
+      
+      <div className="container mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}

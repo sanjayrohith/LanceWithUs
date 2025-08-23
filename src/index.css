@@ -210,4 +210,35 @@
     backdrop-filter: blur(30px);
     -webkit-backdrop-filter: blur(30px);
   }
+
+  /* SVG Morph animation enhancements */
+  .svg-morph-container {
+    will-change: transform;
+    transition: transform 0.3s ease;
+  }
+  
+  .svg-morph-container:hover {
+    transform: scale(1.05);
+  }
+
+  /* Geometric morph positioning */
+  .geometric-morph-bg {
+    pointer-events: none;
+    user-select: none;
+    mix-blend-mode: multiply;
+  }
+
+  /* Horizontal scroll story enhancements */
+  .story-frame {
+    perspective: 1000px;
+    transform-style: preserve-3d;
+  }
+
+  .story-keyword {
+    background: linear-gradient(45deg, currentColor, transparent);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+  }
 }
