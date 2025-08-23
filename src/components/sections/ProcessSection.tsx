@@ -10,7 +10,7 @@ const steps = [
   },
   {
     number: 2,
-    title: "Design",
+    title: "Multi Design",
     description: "We create wireframes and mockups to bring your idea to life visually.",
     color: "bg-accent",
     borderColor: "border-accent/50",
