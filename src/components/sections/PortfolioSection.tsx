@@ -2,6 +2,7 @@ import { motion } from "framer-motion";
 import projectEcommerce from "@/assets/project-ecommerce.jpg";
 import projectFitness from "@/assets/project-fitness.jpg";
 import projectDashboard from "@/assets/project-dashboard.jpg";
+import { useState } from "react";
 
 const projects = [
   {
@@ -22,6 +23,9 @@ const projects = [
 ];
 
 export const PortfolioSection = () => {
+  const [selectedProject, setSelectedProject] = useState<null | typeof projects[0]>(null);
+  const closeModal = () => setSelectedProject(null);
+  
   return (
     <section id="portfolio" className="py-20 sm:py-32">
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
@@ -50,6 +54,7 @@ export const PortfolioSection = () => {
               viewport={{ once: true }}
               whileHover={{ y: -5 }}
               className="group rounded-lg overflow-hidden relative cursor-pointer"
+              onClick={() => setSelectedProject(project)}
             >
               <div className="aspect-video overflow-hidden">
                 <img
@@ -74,6 +79,47 @@ export const PortfolioSection = () => {
             </motion.div>
           ))}
         </div>
+
+        {/* Modal Popup - Moved outside the map loop */}
+        {selectedProject && (
+          <motion.div
+            initial={{ opacity: 0, scale: 0.8 }}
+            animate={{ opacity: 1, scale: 1 }}
+            exit={{ opacity: 0, scale: 0.8 }}
+            className="fixed inset-0 z-50 flex items-center justify-center bg-black/60"
+            onClick={closeModal}
+          >
+            <motion.div
+              initial={{ y: 40, opacity: 0 }}
+              animate={{ y: 0, opacity: 1 }}
+              exit={{ y: 40, opacity: 0 }}
+              className="bg-background rounded-xl shadow-xl p-8 max-w-md w-full text-center relative"
+              onClick={e => e.stopPropagation()}
+            >
+              <button
+                className="absolute top-2 right-2 text-2xl text-muted-foreground hover:text-primary"
+                onClick={closeModal}
+                aria-label="Close"
+              >
+                &times;
+              </button>
+              <img 
+                src={selectedProject.image} 
+                alt={selectedProject.title} 
+                className="w-full h-40 object-cover rounded-lg mb-4" 
+              />
+              <h3 className="text-2xl font-bold text-foreground mb-2">
+                {selectedProject.title}
+              </h3>
+              <p className="text-muted-foreground mb-4">
+                {selectedProject.description}
+              </p>
+              <p className="text-sm text-muted-foreground">
+                More details about this project will go here.
+              </p>
+            </motion.div>
+          </motion.div>
+        )}
       </div>
     </section>
   );
