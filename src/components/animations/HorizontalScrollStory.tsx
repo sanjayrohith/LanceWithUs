@@ -33,29 +33,38 @@ export const HorizontalScrollStory = ({
     const container = containerRef.current;
     const scrollContainer = scrollRef.current;
 
-    // Set up horizontal scroll animation
+    // Clear any existing ScrollTriggers
+    ScrollTrigger.getAll().forEach(trigger => trigger.kill());
+
+    // Calculate proper scroll distance for all frames
+    const totalWidth = frames.length * window.innerWidth;
+    const scrollDistance = totalWidth - window.innerWidth;
+
+    // Set up horizontal scroll animation with corrected calculations
     const scrollTween = gsap.to(scrollContainer, {
-      x: () => -(scrollContainer.scrollWidth - window.innerWidth),
+      x: -scrollDistance,
       ease: "none",
       scrollTrigger: {
         trigger: container,
         start: "top top",
-        end: () => `+=${scrollContainer.scrollWidth}`,
+        end: `+=${scrollDistance * 1.5}`, // Increased end value to ensure all frames are accessible
         scrub: 1,
         pin: true,
         anticipatePin: 1,
+        invalidateOnRefresh: true, // Recalculate on window resize
+        refreshPriority: -1, // Lower priority to run after other calculations
       }
     });
 
-    // Animate individual frames
-    const frames = scrollContainer.querySelectorAll('.story-frame');
-    frames.forEach((frame, index) => {
-      const keyword = frame.querySelector('.story-keyword');
-      const title = frame.querySelector('.story-title');
-      const description = frame.querySelector('.story-description');
+    // Animate individual story frames
+    const storyFrames = scrollContainer.querySelectorAll('.story-frame');
+    storyFrames.forEach((frameElement, index) => {
+      const keyword = frameElement.querySelector('.story-keyword');
+      const title = frameElement.querySelector('.story-title');
+      const description = frameElement.querySelector('.story-description');
 
       // Frame entrance animation
-      gsap.fromTo(frame, 
+      gsap.fromTo(frameElement, 
         { 
           scale: 0.8,
           opacity: 0,
@@ -68,7 +77,7 @@ export const HorizontalScrollStory = ({
           duration: 1,
           ease: "power2.out",
           scrollTrigger: {
-            trigger: frame,
+            trigger: frameElement,
             start: "left 80%",
             end: "left 20%",
             scrub: 1,
@@ -92,7 +101,7 @@ export const HorizontalScrollStory = ({
             duration: 0.8,
             ease: "back.out(1.7)",
             scrollTrigger: {
-              trigger: frame,
+              trigger: frameElement,
               start: "left 60%",
               end: "left 40%",
               scrub: 1,
@@ -116,7 +125,7 @@ export const HorizontalScrollStory = ({
             stagger: 0.1,
             ease: "power2.out",
             scrollTrigger: {
-              trigger: frame,
+              trigger: frameElement,
               start: "left 50%",
               end: "left 30%",
               scrub: 1,
@@ -127,7 +136,15 @@ export const HorizontalScrollStory = ({
       }
     });
 
+    // Add window resize handler to refresh ScrollTrigger calculations
+    const handleResize = () => {
+      ScrollTrigger.refresh();
+    };
+
+    window.addEventListener('resize', handleResize);
+
     return () => {
+      window.removeEventListener('resize', handleResize);
       ScrollTrigger.getAll().forEach(trigger => trigger.kill());
     };
   }, [frames]);
@@ -148,12 +165,13 @@ export const HorizontalScrollStory = ({
       <div
         ref={scrollRef}
         className="flex items-center h-full"
-        style={{ width: `${frames.length * 100}vw` }}
+        style={{ width: `${frames.length * 100}vw`, minWidth: `${frames.length * 100}vw` }}
       >
         {frames.map((frame, index) => (
           <div
             key={index}
             className="story-frame flex-shrink-0 w-screen h-full flex items-center justify-center relative"
+            style={{ minWidth: '100vw', width: '100vw' }}
           >
             {/* Background gradient based on frame color */}
             <div 
