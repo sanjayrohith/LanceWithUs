@@ -47,8 +47,10 @@ export const HeroSection = () => {
 
   return (
     <>
-      {/* Horizontal Scroll Story - Primary Hero Experience */}
-      <HorizontalScrollStory frames={storyFrames} />
+      {/* Add top padding to account for fixed navigation */}
+      <div className="pt-24">
+        {/* Horizontal Scroll Story - Primary Hero Experience */}
+        <HorizontalScrollStory frames={storyFrames} />
       
       {/* Traditional Hero as backup - can be removed if horizontal scroll works well */}
       <section
@@ -128,6 +130,7 @@ export const HeroSection = () => {
           </motion.div>
         </motion.div>
       </section>
+      </div>
     </>
   );
 };

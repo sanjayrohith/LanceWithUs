@@ -1,115 +1,61 @@
-import { useState, useEffect } from "react";
-import { Menu, X } from "lucide-react";
-import { Button } from "@/components/ui/button";
+import { useState } from "react";
+import { motion } from "framer-motion";
 
 export const Navigation = () => {
-  const [isOpen, setIsOpen] = useState(false);
-  const [isScrolled, setIsScrolled] = useState(false);
+  const [activeItem, setActiveItem] = useState("Case Studies");
 
-  useEffect(() => {
-    const handleScroll = () => {
-      setIsScrolled(window.scrollY > 50);
-    };
-
-    window.addEventListener("scroll", handleScroll);
-    return () => window.removeEventListener("scroll", handleScroll);
-  }, []);
+  const navItems = [
+    { name: "Services", hasIcon: false, id: "services" },
+    { name: "Case Studies", hasIcon: true, id: "portfolio" },
+    { name: "About", hasIcon: false, id: "about" },
+    { name: "Resources", hasIcon: false, id: "process" },
+    { name: "Free Audit", hasIcon: false, id: "contact" }
+  ];
 
   const scrollToSection = (id: string) => {
     const element = document.getElementById(id);
     if (element) {
       element.scrollIntoView({ behavior: "smooth" });
     }
-    setIsOpen(false);
   };
 
   return (
-    <header
-      className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
-        isScrolled ? "glass-card bg-background/50" : "bg-transparent"
-      }`}
+    <motion.nav 
+      initial={{ opacity: 0, y: -20 }}
+      animate={{ opacity: 1, y: 0 }}
+      className="fixed top-6 left-1/2 transform -translate-x-1/2 -ml-56 z-50"
     >
-      <div className="container mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex items-center justify-between h-16">
-          <div className="flex-shrink-0">
-            <a 
-              href="#home" 
-              className="text-2xl font-bold text-foreground hover:text-primary transition-colors"
-              onClick={(e) => {
-                e.preventDefault();
-                scrollToSection("home");
+      <div className="backdrop-blur-xl bg-black/30 border border-white/20 rounded-full px-6 py-2.5 shadow-2xl shadow-black/50">
+        <div className="flex items-center justify-center space-x-4">
+          {navItems.map((item) => (
+            <button
+              key={item.name}
+              onClick={() => {
+                setActiveItem(item.name);
+                scrollToSection(item.id);
               }}
+              className={`relative flex items-center space-x-1.5 px-3 py-2 rounded-full transition-all duration-300 ${
+                activeItem === item.name 
+                  ? 'text-white' 
+                  : 'text-gray-300 hover:text-white'
+              }`}
             >
-              Stellar<span className="text-primary">.</span>
-            </a>
-          </div>
-
-          {/* Desktop Menu */}
-          <div className="hidden md:block">
-            <div className="ml-10 flex items-baseline space-x-4">
-              {[
-                { name: "About", id: "about" },
-                { name: "Services", id: "services" },
-                { name: "Portfolio", id: "portfolio" },
-              ].map((item) => (
-                <button
-                  key={item.name}
-                  onClick={() => scrollToSection(item.id)}
-                  className="text-muted-foreground hover:text-primary px-3 py-2 rounded-md text-sm font-medium transition-colors"
-                >
-                  {item.name}
-                </button>
-              ))}
-              <Button
-                onClick={() => scrollToSection("contact")}
-                variant="outline"
-                className="neon-glow border-primary/20 text-primary hover:bg-primary hover:text-primary-foreground"
-              >
-                Hire Us
-              </Button>
-            </div>
-          </div>
-
-          {/* Mobile menu button */}
-          <div className="md:hidden">
-            <Button
-              variant="ghost"
-              size="sm"
-              onClick={() => setIsOpen(!isOpen)}
-              className="text-muted-foreground hover:text-foreground"
-            >
-              {isOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
-            </Button>
-          </div>
+              {item.hasIcon && (
+                <div className="w-1.5 h-1.5 bg-orange-500 rounded-full shadow-lg shadow-orange-500/50"></div>
+              )}
+              <span className="text-xs font-medium whitespace-nowrap">{item.name}</span>
+              
+              {activeItem === item.name && (
+                <motion.div
+                  layoutId="activeBackground"
+                  className="absolute inset-0 bg-white/15 backdrop-blur-sm rounded-full border border-white/20"
+                  transition={{ type: "spring", bounce: 0.2, duration: 0.6 }}
+                />
+              )}
+            </button>
+          ))}
         </div>
       </div>
-
-      {/* Mobile Menu */}
-      {isOpen && (
-        <div className="md:hidden glass-card border-t border-white/10">
-          <div className="px-2 pt-2 pb-3 space-y-1 sm:px-3">
-            {[
-              { name: "About", id: "about" },
-              { name: "Services", id: "services" },
-              { name: "Portfolio", id: "portfolio" },
-            ].map((item) => (
-              <button
-                key={item.name}
-                onClick={() => scrollToSection(item.id)}
-                className="text-muted-foreground hover:text-primary block px-3 py-2 rounded-md text-base font-medium w-full text-left transition-colors"
-              >
-                {item.name}
-              </button>
-            ))}
-            <Button
-              onClick={() => scrollToSection("contact")}
-              className="w-full justify-start neon-glow bg-primary text-primary-foreground hover:bg-primary/90"
-            >
-              Hire Us
-            </Button>
-          </div>
-        </div>
-      )}
-    </header>
+    </motion.nav>
   );
 };
