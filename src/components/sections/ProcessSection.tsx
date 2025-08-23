@@ -1,85 +1,179 @@
-import { motion } from "framer-motion";
+import { motion, useScroll, useTransform } from "framer-motion";
+import { useRef, useState, useLayoutEffect } from "react";
+import { Lightbulb, Palette, Code, Rocket } from "lucide-react";
 
+// The data for our process steps remains the same.
 const steps = [
   {
     number: 1,
     title: "Discovery",
-    description: "We start by understanding your vision, goals, and requirements.",
-    color: "bg-primary",
-    borderColor: "border-primary/50",
+    description: "We start by understanding your vision, goals, and requirements in detail, aligning everything before moving forward.",
+    color: "from-indigo-500 to-purple-500",
+    icon: Lightbulb,
   },
   {
     number: 2,
     title: "Multi Design",
-    description: "We create wireframes and mockups to bring your idea to life visually.",
-    color: "bg-accent",
-    borderColor: "border-accent/50",
+    description: "We create wireframes and multiple design variations that visually shape your idea into reality with vibrant concepts.",
+    color: "from-pink-500 to-orange-500",
+    icon: Palette,
   },
   {
     number: 3,
     title: "Development",
-    description: "Our team gets to work, writing clean and efficient code.",
-    color: "bg-stellar-pink",
-    borderColor: "border-stellar-pink/50",
+    description: "Our expert team begins coding with precision, ensuring clean, scalable, and efficient development practices.",
+    color: "from-green-400 to-teal-500",
+    icon: Code,
   },
   {
     number: 4,
     title: "Delivery",
-    description: "We deploy your project and provide support for a smooth launch.",
-    color: "bg-stellar-green",
-    borderColor: "border-stellar-green/50",
+    description: "We deploy your project successfully and provide ongoing support to guarantee a smooth launch and sustainability.",
+    color: "from-yellow-400 to-red-500",
+    icon: Rocket,
   },
 ];
 
-export const ProcessSection = () => {
+// A dedicated component for the dynamically drawn SVG path
+const SvgPath = ({ path, scrollProgress }) => {
+  // Animate the path drawing based on the overall scroll progress
+  const pathLength = useTransform(scrollProgress, [0.1, 0.8], [0, 1]);
+
   return (
-    <section id="process" className="py-20 sm:py-32 bg-background/20">
+    <svg width="100%" height="100%" className="absolute top-0 left-0" style={{ zIndex: 0, pointerEvents: "none" }}>
+      <defs>
+        <marker id="arrowhead" markerWidth="10" markerHeight="7" refX="0" refY="3.5" orient="auto">
+          <polygon points="0 0, 10 3.5, 0 7" fill="hsl(var(--accent))" />
+        </marker>
+      </defs>
+      {/* The track for the line */}
+      <path d={path} stroke="hsl(var(--primary) / 0.2)" strokeWidth="3" fill="transparent" />
+      {/* The animated line that draws on top */}
+      <motion.path
+        d={path}
+        stroke="hsl(var(--accent))"
+        strokeWidth="3"
+        fill="transparent"
+        style={{ pathLength }}
+        markerEnd="url(#arrowhead)"
+      />
+    </svg>
+  );
+};
+
+export const ProcessSection = () => {
+  const containerRef = useRef(null);
+  const cardRefs = useRef([]);
+  const [svgPath, setSvgPath] = useState("");
+
+  const { scrollYProgress } = useScroll({
+    target: containerRef,
+    offset: ["start center", "end center"],
+  });
+
+  // This effect calculates the SVG path based on the card positions.
+  useLayoutEffect(() => {
+    const calculatePath = () => {
+      const cardElements = cardRefs.current;
+      if (cardElements.length < 2) return;
+
+      let pathData = "";
+      for (let i = 0; i < cardElements.length - 1; i++) {
+        const startCard = cardElements[i];
+        const endCard = cardElements[i + 1];
+        
+        if (startCard && endCard) {
+            const containerRect = containerRef.current.getBoundingClientRect();
+            const startRect = startCard.getBoundingClientRect();
+            const endRect = endCard.getBoundingClientRect();
+
+            // Calculate positions relative to the container
+            const startX = startRect.right - containerRect.left + 10;
+            const startY = startRect.top - containerRect.top + startRect.height / 2;
+            const endX = endRect.left - containerRect.left - 10;
+            const endY = endRect.top - containerRect.top + endRect.height / 2;
+            
+            // The first move command
+            if (i === 0) {
+                pathData += `M ${startX} ${startY} `;
+            }
+
+            // Create a smooth cubic bezier curve
+            const controlX1 = startX + (endX - startX) * 0.5;
+            const controlY1 = startY;
+            const controlX2 = startX + (endX - startX) * 0.5;
+            const controlY2 = endY;
+
+            pathData += `C ${controlX1} ${controlY1}, ${controlX2} ${controlY2}, ${endX} ${endY} `;
+        }
+      }
+      setSvgPath(pathData);
+    };
+    
+    // Calculate on mount and on resize
+    calculatePath();
+    window.addEventListener('resize', calculatePath);
+    return () => window.removeEventListener('resize', calculatePath);
+  }, []);
+
+  return (
+    <section id="process" className="py-20 sm:py-32 bg-background/20 overflow-hidden">
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6 }}
-          viewport={{ once: true }}
-          className="text-center mb-16"
+          viewport={{ once: true, amount: 0.5 }}
+          className="text-center mb-20 md:mb-32"
         >
           <h2 className="text-3xl md:text-4xl font-bold text-foreground">
             How We <span className="text-accent">Work</span>
           </h2>
-          <p className="mt-4 text-lg text-muted-foreground">
-            Our streamlined process from idea to launch.
+          <p className="mt-4 text-lg text-muted-foreground max-w-2xl mx-auto">
+            Our streamlined process from idea to launch, explained step by step.
           </p>
         </motion.div>
 
-        <div className="relative">
-          {/* Connecting line - hidden on mobile */}
-          <div className="hidden md:block absolute top-1/2 left-0 w-full h-0.5 bg-primary/30 -translate-y-1/2" />
-          
-          <div className="grid grid-cols-1 md:grid-cols-4 gap-8 relative">
-            {steps.map((step, index) => (
-              <motion.div
-                key={step.number}
-                initial={{ opacity: 0, y: 30 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.6, delay: index * 0.1 }}
-                viewport={{ once: true }}
-                className="text-center"
-              >
-                <div className="relative inline-block">
-                  <motion.div
-                    whileHover={{ scale: 1.1 }}
-                    className={`w-16 h-16 rounded-full ${step.color} flex items-center justify-center text-2xl font-bold mx-auto mb-4 border-4 ${step.borderColor} text-background relative z-10`}
-                  >
+        <div ref={containerRef} className="relative">
+          {/* Render the dynamic SVG path on larger screens */}
+          <div className="hidden md:block">
+             <SvgPath path={svgPath} scrollProgress={scrollYProgress} />
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-x-12 gap-y-16 md:gap-y-24">
+            {steps.map((step, index) => {
+              // Determine the animation range for this specific card
+              const start = index / steps.length;
+              const end = (index + 1) / steps.length;
+              
+              const opacity = useTransform(scrollYProgress, [start, (start + end)/2], [0.3, 1]);
+              const scale = useTransform(scrollYProgress, [start, (start + end)/2], [0.9, 1]);
+              
+              // Apply staggering effect on desktop
+              const isStaggered = index % 2 !== 0;
+
+              return (
+                <motion.div
+                  key={step.number}
+                  ref={(el) => (cardRefs.current[index] = el)}
+                  style={{ opacity, scale }}
+                  className={`relative z-10 p-6 rounded-2xl shadow-xl border border-white/10 bg-gradient-to-br ${step.color} ${isStaggered ? 'md:mt-24' : ''}`}
+                >
+                  <span className="absolute -top-3 -left-3 bg-white text-gray-800 font-bold w-8 h-8 flex items-center justify-center rounded-full shadow-md">
                     {step.number}
-                  </motion.div>
-                </div>
-                <h3 className="text-xl font-bold text-foreground mb-2">
-                  {step.title}
-                </h3>
-                <p className="text-muted-foreground leading-relaxed">
-                  {step.description}
-                </p>
-              </motion.div>
-            ))}
+                  </span>
+                  <div className="flex flex-col items-center text-center">
+                    <div className="w-16 h-16 rounded-full bg-white/20 flex items-center justify-center mb-4 border-2 border-white/30">
+                      <step.icon className="w-8 h-8 text-white" />
+                    </div>
+                    <h3 className="text-xl font-extrabold mb-2 text-white">{step.title}</h3>
+                    <p className="text-sm leading-relaxed text-white/90">
+                      {step.description}
+                    </p>
+                  </div>
+                </motion.div>
+              );
+            })}
           </div>
         </div>
       </div>
