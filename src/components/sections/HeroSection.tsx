@@ -9,9 +9,9 @@ import { HorizontalScrollStory } from "@/components/animations/HorizontalScrollS
 const storyFrames = [
   {
     title: "Welcome to",
-    subtitle: "Stellar Solutions",
+    subtitle: "",
     description: "Where innovation meets expertise. We are a team of passionate students creating digital experiences that matter.",
-    keyword: "STELLAR",
+    keyword: "LanceWithUs",
     color: "hsl(var(--primary))"
   },
   {
