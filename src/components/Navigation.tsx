@@ -1,61 +1,161 @@
-import { useState } from "react";
+import { useEffect, useState, useMemo } from "react";
 import { motion } from "framer-motion";
 
 export const Navigation = () => {
-  const [activeItem, setActiveItem] = useState("Case Studies");
+  const [activeId, setActiveId] = useState("hero");
+  const [isManualNavigation, setIsManualNavigation] = useState(false);
 
-  const navItems = [
-    { name: "Services", hasIcon: false, id: "services" },
-    { name: "Case Studies", hasIcon: true, id: "portfolio" },
-    { name: "About", hasIcon: false, id: "about" },
-    { name: "Resources", hasIcon: false, id: "process" },
-    { name: "Free Audit", hasIcon: false, id: "contact" }
-  ];
+  const navItems = useMemo(
+    () => [
+      { name: "Home", id: "hero" },
+      { name: "About", id: "about" },
+      { name: "Services", id: "services" },
+      { name: "Our Work", id: "portfolio" },
+      { name: "Workflow", id: "process" },
+      { name: "ContactUs", id: "contact" },
+    ],
+    []
+  );
 
   const scrollToSection = (id: string) => {
-    const element = document.getElementById(id);
-    if (element) {
-      element.scrollIntoView({ behavior: "smooth" });
+    // Immediately update the active state for responsive UI
+    setActiveId(id);
+    setIsManualNavigation(true);
+    
+    // Clear the manual navigation flag after a short delay
+    setTimeout(() => {
+      setIsManualNavigation(false);
+    }, 1000);
+    
+    if (id === "hero") {
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    } else {
+      const element = document.getElementById(id);
+      if (element) {
+        // Account for fixed navigation height with better offset
+        const navHeight = 120; // Increased offset for better positioning
+        const offsetTop = element.offsetTop - navHeight;
+        window.scrollTo({ top: Math.max(0, offsetTop), behavior: "smooth" });
+      }
     }
   };
 
+  useEffect(() => {
+    const handleScroll = () => {
+      // Don't update active state if user just clicked a navigation button
+      if (isManualNavigation) return;
+      
+      const scrollPosition = window.scrollY + 200; // Better offset for detection
+      
+      // Get all sections with their positions
+      const sections = navItems.map(item => {
+        const element = document.getElementById(item.id);
+        return {
+          id: item.id,
+          offsetTop: element ? element.offsetTop : 0,
+          offsetBottom: element ? element.offsetTop + element.offsetHeight : 0
+        };
+      }).filter(section => section.offsetTop > 0);
+
+      // Sort sections by their position
+      sections.sort((a, b) => a.offsetTop - b.offsetTop);
+
+      // Find current section
+      let currentSection = "hero";
+      
+      // Check if we're at the very top
+      if (window.scrollY < 100) {
+        currentSection = "hero";
+      } else {
+        // Find the section that we're currently viewing
+        for (let i = sections.length - 1; i >= 0; i--) {
+          if (scrollPosition >= sections[i].offsetTop) {
+            currentSection = sections[i].id;
+            break;
+          }
+        }
+      }
+
+      // Force contact at bottom
+      const isAtBottom = window.innerHeight + window.scrollY >= document.body.offsetHeight - 100;
+      if (isAtBottom) {
+        currentSection = "contact";
+      }
+
+      setActiveId(currentSection);
+    };
+
+    // Throttle scroll events for better performance
+    let ticking = false;
+    const throttledHandleScroll = () => {
+      if (!ticking) {
+        requestAnimationFrame(() => {
+          handleScroll();
+          ticking = false;
+        });
+        ticking = true;
+      }
+    };
+
+    window.addEventListener("scroll", throttledHandleScroll, { passive: true });
+    handleScroll(); // Call once to set initial state
+
+    return () => {
+      window.removeEventListener("scroll", throttledHandleScroll);
+    };
+  }, [navItems, isManualNavigation]);
+
   return (
-    <motion.nav 
-      initial={{ opacity: 0, y: -20 }}
-      animate={{ opacity: 1, y: 0 }}
-      className="fixed top-6 left-1/2 transform -translate-x-1/2 -ml-64 z-50"
-    >
-      <div className="backdrop-blur-xl bg-black/30 border border-white/20 rounded-full px-6 py-2.5 shadow-2xl shadow-black/50">
-        <div className="flex items-center justify-center space-x-4">
+    <nav className="w-full fixed top-6 z-50 flex justify-center">
+      <motion.div
+        initial={{ opacity: 0, y: -20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.5 }}
+        className="backdrop-blur-xl bg-black/20 border border-white/10 rounded-full px-6 py-3 shadow-2xl shadow-black/30 backdrop-saturate-150"
+        style={{
+          background: 'rgba(0, 0, 0, 0.1)',
+          backdropFilter: 'blur(20px) saturate(180%)',
+          WebkitBackdropFilter: 'blur(20px) saturate(180%)',
+          border: '1px solid rgba(255, 255, 255, 0.125)',
+          boxShadow: '0 8px 32px rgba(0, 0, 0, 0.3), inset 0 1px 0 rgba(255, 255, 255, 0.1)'
+        }}
+      >
+        <div className="flex items-center justify-center space-x-1">
           {navItems.map((item) => (
             <button
-              key={item.name}
-              onClick={() => {
-                setActiveItem(item.name);
-                scrollToSection(item.id);
-              }}
-              className={`relative flex items-center space-x-1.5 px-3 py-2 rounded-full transition-all duration-300 ${
-                activeItem === item.name 
-                  ? 'text-white' 
-                  : 'text-gray-300 hover:text-white'
+              key={item.id}
+              onClick={() => scrollToSection(item.id)}
+              className={`relative px-4 py-2 rounded-full text-sm font-medium transition-all duration-300 hover:scale-105 ${
+                activeId === item.id
+                  ? "text-white shadow-lg"
+                  : "text-gray-300 hover:text-white hover:bg-white/5"
               }`}
             >
-              {item.hasIcon && (
-                <div className="w-1.5 h-1.5 bg-orange-500 rounded-full shadow-lg shadow-orange-500/50"></div>
-              )}
-              <span className="text-xs font-medium whitespace-nowrap">{item.name}</span>
-              
-              {activeItem === item.name && (
+              <span className="relative z-10">{item.name}</span>
+              {activeId === item.id && (
                 <motion.div
                   layoutId="activeBackground"
-                  className="absolute inset-0 bg-white/15 backdrop-blur-sm rounded-full border border-white/20"
-                  transition={{ type: "spring", bounce: 0.2, duration: 0.6 }}
+                  className="absolute inset-0 bg-gradient-to-r from-purple-500/30 to-blue-500/30 rounded-full border border-white/20"
+                  transition={{ 
+                    type: "spring", 
+                    stiffness: 400, 
+                    damping: 30,
+                    mass: 0.8,
+                    duration: 0.6
+                  }}
+                  initial={false}
+                  animate={{ scale: 1, opacity: 1 }}
+                  style={{
+                    backdropFilter: 'blur(10px)',
+                    WebkitBackdropFilter: 'blur(10px)',
+                    boxShadow: '0 4px 12px rgba(147, 51, 234, 0.3), inset 0 1px 0 rgba(255, 255, 255, 0.2)'
+                  }}
                 />
               )}
             </button>
           ))}
         </div>
-      </div>
-    </motion.nav>
+      </motion.div>
+    </nav>
   );
 };

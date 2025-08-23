@@ -122,3 +122,23 @@ export const AboutSection = () => {
     </section>
   );
 };
+/*Implement the following:
+
+🌟 Features:
+
+Hero: Floating particles with mouse-following glow
+About: Rotating geometric shapes in brand colors
+Services: Matrix-style code rain effect
+Portfolio: Gradient waves with floating orbs
+Contact: Animated network connections
+🔄 Smooth Transitions:
+
+1.2-second fade transitions between backgrounds
+IntersectionObserver detects section changes
+No jarring background switches
+🎨 Visual Appeal:
+
+Each background matches section content
+Subtle animations that don't distract
+Consistent brand colors throughout
+The backgrounds will automatically transition as you scroll between sections. */
