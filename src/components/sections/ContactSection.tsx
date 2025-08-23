@@ -3,18 +3,21 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { useToast } from "@/hooks/use-toast";
-import { useState } from "react";
+import { useState, useRef } from "react";
+import emailjs from "@emailjs/browser";
 import { MagneticButton } from "@/components/animations/MagneticButton";
 import { StaggeredText } from "@/components/animations/StaggeredText";
 import { GeometricMorph } from "@/components/animations/GeometricMorph";
 
 export const ContactSection = () => {
   const { toast } = useToast();
+  const form = useRef<HTMLFormElement>(null);
   const [formData, setFormData] = useState({
     name: "",
     email: "",
     message: "",
   });
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -28,13 +31,35 @@ export const ContactSection = () => {
       return;
     }
 
-    // Simulate form submission
-    toast({
-      title: "Message sent!",
-      description: "Thank you for reaching out. We'll get back to you soon.",
-    });
+    if (!form.current) return;
 
-    setFormData({ name: "", email: "", message: "" });
+    setIsSubmitting(true);
+
+    // 👇 PASTE YOUR KEYS FROM EMAILJS HERE
+    emailjs.sendForm(
+        'service_0cu57kl',
+        'template_36fjtkv',
+        form.current,
+        'tu8r_QHA28zF3LWBL'
+      )
+      .then(
+        (result) => {
+          toast({
+            title: "Message sent!",
+            description: "Thank you for reaching out. We'll get back to you soon.",
+          });
+          setFormData({ name: "", email: "", message: "" });
+        },
+        (error) => {
+          toast({
+            title: "Error sending message",
+            description: "Please try again later.",
+            variant: "destructive",
+          });
+        }
+      ).finally(() => {
+        setIsSubmitting(false);
+      });
   };
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
@@ -108,7 +133,7 @@ Looking forward to hearing from you.`;
           viewport={{ once: true }}
           className="max-w-xl mx-auto"
         >
-          <form onSubmit={handleSubmit} className="space-y-6">
+          <form ref={form} onSubmit={handleSubmit} className="space-y-6">
             <div>
               <Input
                 type="text"
@@ -155,9 +180,10 @@ Looking forward to hearing from you.`;
               <Button
                 type="submit"
                 size="lg"
-                className="neon-glow bg-primary text-primary-foreground hover:bg-primary/90 font-semibold px-8 py-6 text-lg transform hover:scale-105 transition-all duration-300 magnetic"
+                disabled={isSubmitting}
+                className="neon-glow bg-primary text-primary-foreground hover:bg-primary/90 font-semibold px-8 py-6 text-lg transform hover:scale-105 transition-all duration-300 magnetic disabled:opacity-50 disabled:scale-100"
               >
-                Get in Touch
+                {isSubmitting ? "Sending..." : "Get in Touch"}
               </Button>
             </div>
           </form>
