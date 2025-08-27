@@ -1,8 +1,24 @@
 import { useState } from "react";
-import { MessageCircle, X } from "lucide-react";
+import { X } from "lucide-react";
 
 // --- Custom SVG Icon Components ---
-// I've created these based on your images to avoid any import/export issues.
+// Connection Icon: Two interlocking rings to symbolize connection
+const ConnectionIcon = ({ className }) => (
+  <svg className={className} xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" fill="none">
+    <circle cx="12" cy="20" r="6" stroke="#fff" strokeWidth="2" fill="url(#grad1)" />
+    <circle cx="20" cy="12" r="6" stroke="#fff" strokeWidth="2" fill="url(#grad2)" />
+    <defs>
+      <radialGradient id="grad1" cx="0.5" cy="0.5" r="0.5" fx="0.5" fy="0.5" gradientTransform="matrix(12 0 0 12 6 14)" >
+        <stop offset="0%" stopColor="#6EE7B7" />
+        <stop offset="100%" stopColor="#3B82F6" />
+      </radialGradient>
+      <radialGradient id="grad2" cx="0.5" cy="0.5" r="0.5" fx="0.5" fy="0.5" gradientTransform="matrix(12 0 0 12 14 6)" >
+        <stop offset="0%" stopColor="#F472B6" />
+        <stop offset="100%" stopColor="#6366F1" />
+      </radialGradient>
+    </defs>
+  </svg>
+);
 
 const EmailIcon = ({ className }) => (
   <svg className={className} xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
@@ -39,12 +55,13 @@ export const FloatingChat = () => {
 
   return (
     <>
-      {/* This is a standard button, replacing the custom one to fix the error. */}
+      {/* Modern Colorful Connection Button */}
       <button
         onClick={() => setIsPopupOpen(true)}
-        className="fixed bottom-5 right-5 bg-green-500 hover:bg-green-600 text-white w-14 h-14 rounded-full shadow-lg flex items-center justify-center transform hover:scale-110 transition-all duration-300 z-40"
+        className="fixed bottom-5 right-5 w-16 h-16 rounded-full flex items-center justify-center z-40 shadow-xl bg-gradient-to-tr from-pink-400 via-blue-400 to-green-400 animate-gradient-move border-4 border-white/30 hover:scale-110 transition-transform duration-300"
+        style={{ boxShadow: "0 0 24px 6px rgba(59,130,246,0.3), 0 0 48px 12px rgba(236,72,153,0.2)" }}
       >
-        <MessageCircle className="w-8 h-8" />
+        <ConnectionIcon className="w-10 h-10" />
       </button>
 
       {/* This section renders the popup when isPopupOpen is true */}
