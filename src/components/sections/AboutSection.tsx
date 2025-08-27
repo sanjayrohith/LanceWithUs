@@ -14,7 +14,7 @@ const teamMembers = [
     role: "Lead Developer",
     color: "border-primary/50",
     roleColor: "text-primary",
-    description: "The architect of our digital dreams. Fueled by coffee and a passion for clean code.",
+    description: "I design, build, and ship full-stack applications — while leading teams to deliver high-quality software.",
     image: teamrohit,
     linkedinUrl: "https://www.linkedin.com/in/sanjayrohith18/",
   },
@@ -121,7 +121,6 @@ export const AboutSection = () => {
           <div className="relative w-full">
             <div 
               ref={scope}
-              // Removed snap-x and snap-mandatory to prevent conflict with the animation
               className="flex overflow-x-auto space-x-8 py-4"
               style={{ scrollbarWidth: 'none', '-ms-overflow-style': 'none' }}
             >
@@ -160,6 +159,41 @@ export const AboutSection = () => {
                   </MotionBlurCard>
                 </div>
               ))}
+            </div>
+            {/* Symbolic horizontal scroll indicator */}
+            <div className="absolute left-1/2 -translate-x-1/2 -bottom-6 flex items-center justify-center">
+              <svg className="w-12 h-8" viewBox="0 0 48 32" fill="none">
+                <defs>
+                  <linearGradient id="scroll-gradient" x1="0" y1="16" x2="48" y2="16" gradientUnits="userSpaceOnUse">
+                    <stop stopColor="#8B5CF6" />
+                    <stop offset="0.5" stopColor="#06B6D4" />
+                    <stop offset="1" stopColor="#10B981" />
+                  </linearGradient>
+                  <filter id="scroll-glow" x="-4" y="-4" width="56" height="40" filterUnits="userSpaceOnUse">
+                    <feGaussianBlur stdDeviation="3" result="glow" />
+                    <feMerge>
+                      <feMergeNode in="glow" />
+                      <feMergeNode in="SourceGraphic" />
+                    </feMerge>
+                  </filter>
+                </defs>
+                <g filter="url(#scroll-glow)">
+                  {/* Double arrow pattern suggesting horizontal movement */}
+                  <path d="M8 16 L16 16" stroke="url(#scroll-gradient)" strokeWidth="2.5" strokeLinecap="round" />
+                  <path d="M12 12 L16 16 L12 20" stroke="url(#scroll-gradient)" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" />
+                  
+                  <path d="M20 16 L28 16" stroke="url(#scroll-gradient)" strokeWidth="2.5" strokeLinecap="round" />
+                  <path d="M24 12 L28 16 L24 20" stroke="url(#scroll-gradient)" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" />
+                  
+                  <path d="M32 16 L40 16" stroke="url(#scroll-gradient)" strokeWidth="2.5" strokeLinecap="round" />
+                  <path d="M36 12 L40 16 L36 20" stroke="url(#scroll-gradient)" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" />
+                  
+                  {/* Subtle dots indicating more content */}
+                  <circle cx="42" cy="16" r="1.5" fill="url(#scroll-gradient)" opacity="0.7" />
+                  <circle cx="45" cy="16" r="1" fill="url(#scroll-gradient)" opacity="0.5" />
+                </g>
+                <animateTransform attributeName="transform" type="translate" values="0 0; 6 0; 0 0" dur="2s" repeatCount="indefinite" />
+              </svg>
             </div>
           </div>
         </div>
