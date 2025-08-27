@@ -15,21 +15,18 @@ const storyFrames = [
     color: "hsl(var(--primary))"
   },
   {
-    title: "Smart",
     subtitle: "Solutions for Every Challenge",
     description: "We leverage cutting-edge technologies and creative problem-solving to build applications that are both powerful and intuitive.",
     keyword: "SMART",
     color: "hsl(var(--accent))"
   },
   {
-    title: "Modern",
     subtitle: "Design Meets Functionality",
     description: "Clean, responsive designs that work seamlessly across all devices, creating experiences your users will love.",
     keyword: "MODERN",
     color: "hsl(var(--stellar-cyan))"
   },
   {
-    title: "Reliable",
     subtitle: "Built to Last and Scale",
     description: "Enterprise-grade solutions with robust architecture, ensuring your digital presence grows with your business.",
     keyword: "RELIABLE",
@@ -48,7 +45,7 @@ export const HeroSection = () => {
   return (
     <>
       {/* Add top padding to account for fixed navigation */}
-      <div id="hero" className="pt-24">
+      <div className="pt-24">
         {/* Horizontal Scroll Story - Primary Hero Experience */}
         <HorizontalScrollStory frames={storyFrames} />
       

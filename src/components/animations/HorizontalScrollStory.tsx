@@ -8,7 +8,7 @@ import { MagneticButton } from './MagneticButton';
 gsap.registerPlugin(ScrollTrigger);
 
 interface StoryFrame {
-  title: string;
+  title?: string;
   subtitle: string;
   description: string;
   keyword: string;
@@ -26,45 +26,97 @@ export const HorizontalScrollStory = ({
 }: HorizontalScrollStoryProps) => {
   const containerRef = useRef<HTMLDivElement>(null);
   const scrollRef = useRef<HTMLDivElement>(null);
+  const sparkleCanvasRef = useRef<HTMLCanvasElement>(null);
 
   useEffect(() => {
+    // Pure Canvas sparkle animation
+    const canvas = sparkleCanvasRef.current;
+    if (canvas) {
+      let width = window.innerWidth;
+      let height = window.innerHeight;
+      canvas.width = width;
+      canvas.height = height;
+      const ctx = canvas.getContext('2d');
+      const SPARKLES = 60;
+      const sparkles = Array.from({ length: SPARKLES }, () => ({
+        x: Math.random() * width,
+        y: height,
+        radius: 0.7 + Math.random() * 1.2, // smaller sparkles
+        vy: -1.2 - Math.random() * 1.2, // faster upward movement
+        life: 60 + Math.random() * 60,
+        maxLife: 0,
+        opacity: 1
+      }));
+      sparkles.forEach(s => s.maxLife = s.life);
+      function drawSparkles() {
+        ctx.clearRect(0, 0, width, height); // Only clear, do not fill with any color
+        for (let s of sparkles) {
+          ctx.save();
+          ctx.globalAlpha = s.opacity;
+          ctx.beginPath();
+          ctx.arc(s.x, s.y, s.radius, 0, 2 * Math.PI);
+          ctx.fillStyle = '#fff';
+          ctx.shadowColor = '#fff';
+          ctx.shadowBlur = 8;
+          ctx.fill();
+          ctx.restore();
+        }
+      }
+      function animateSparkles() {
+        for (let s of sparkles) {
+          s.y += s.vy;
+          s.life--;
+          s.opacity = Math.max(0, s.life / s.maxLife);
+          if (s.life <= 0 || s.y < 0) {
+            // Respawn from the very bottom
+            s.x = Math.random() * width;
+            s.y = height;
+            s.radius = 0.7 + Math.random() * 1.2;
+            s.vy = -1.2 - Math.random() * 1.2;
+            s.life = 60 + Math.random() * 60;
+            s.maxLife = s.life;
+            s.opacity = 1;
+          }
+        }
+        drawSparkles();
+        requestAnimationFrame(animateSparkles);
+      }
+      animateSparkles();
+      window.addEventListener('resize', () => {
+        width = window.innerWidth;
+        height = window.innerHeight;
+        canvas.width = width;
+        canvas.height = height;
+      });
+    }
     if (!containerRef.current || !scrollRef.current) return;
 
     const container = containerRef.current;
     const scrollContainer = scrollRef.current;
 
-    // Clear any existing ScrollTriggers
-    ScrollTrigger.getAll().forEach(trigger => trigger.kill());
-
-    // Calculate proper scroll distance for all frames
-    const totalWidth = frames.length * window.innerWidth;
-    const scrollDistance = totalWidth - window.innerWidth;
-
-    // Set up horizontal scroll animation with corrected calculations
+    // Set up horizontal scroll animation
     const scrollTween = gsap.to(scrollContainer, {
-      x: -scrollDistance,
+      x: () => -(scrollContainer.scrollWidth - window.innerWidth),
       ease: "none",
       scrollTrigger: {
         trigger: container,
         start: "top top",
-        end: `+=${scrollDistance * 1.5}`, // Increased end value to ensure all frames are accessible
+        end: () => `+=${scrollContainer.scrollWidth}`,
         scrub: 1,
         pin: true,
         anticipatePin: 1,
-        invalidateOnRefresh: true, // Recalculate on window resize
-        refreshPriority: -1, // Lower priority to run after other calculations
       }
     });
 
-    // Animate individual story frames
-    const storyFrames = scrollContainer.querySelectorAll('.story-frame');
-    storyFrames.forEach((frameElement, index) => {
-      const keyword = frameElement.querySelector('.story-keyword');
-      const title = frameElement.querySelector('.story-title');
-      const description = frameElement.querySelector('.story-description');
+    // Animate individual frames
+    const frames = scrollContainer.querySelectorAll('.story-frame');
+    frames.forEach((frame, index) => {
+      const keyword = frame.querySelector('.story-keyword');
+      const title = frame.querySelector('.story-title');
+      const description = frame.querySelector('.story-description');
 
       // Frame entrance animation
-      gsap.fromTo(frameElement, 
+      gsap.fromTo(frame, 
         { 
           scale: 0.8,
           opacity: 0,
@@ -77,7 +129,7 @@ export const HorizontalScrollStory = ({
           duration: 1,
           ease: "power2.out",
           scrollTrigger: {
-            trigger: frameElement,
+            trigger: frame,
             start: "left 80%",
             end: "left 20%",
             scrub: 1,
@@ -101,7 +153,7 @@ export const HorizontalScrollStory = ({
             duration: 0.8,
             ease: "back.out(1.7)",
             scrollTrigger: {
-              trigger: frameElement,
+              trigger: frame,
               start: "left 60%",
               end: "left 40%",
               scrub: 1,
@@ -125,7 +177,7 @@ export const HorizontalScrollStory = ({
             stagger: 0.1,
             ease: "power2.out",
             scrollTrigger: {
-              trigger: frameElement,
+              trigger: frame,
               start: "left 50%",
               end: "left 30%",
               scrub: 1,
@@ -136,15 +188,7 @@ export const HorizontalScrollStory = ({
       }
     });
 
-    // Add window resize handler to refresh ScrollTrigger calculations
-    const handleResize = () => {
-      ScrollTrigger.refresh();
-    };
-
-    window.addEventListener('resize', handleResize);
-
     return () => {
-      window.removeEventListener('resize', handleResize);
       ScrollTrigger.getAll().forEach(trigger => trigger.kill());
     };
   }, [frames]);
@@ -162,16 +206,17 @@ export const HorizontalScrollStory = ({
       className={cn("relative overflow-hidden", className)}
       style={{ height: "100vh" }}
     >
+      {/* White sparkles background animation */}
+      <canvas ref={sparkleCanvasRef} className="absolute inset-0 w-full h-full z-0 pointer-events-none" />
       <div
         ref={scrollRef}
         className="flex items-center h-full"
-        style={{ width: `${frames.length * 100}vw`, minWidth: `${frames.length * 100}vw` }}
+        style={{ width: `${frames.length * 100}vw` }}
       >
         {frames.map((frame, index) => (
           <div
             key={index}
             className="story-frame flex-shrink-0 w-screen h-full flex items-center justify-center relative"
-            style={{ minWidth: '100vw', width: '100vw' }}
           >
             {/* Background gradient based on frame color */}
             <div 
@@ -183,26 +228,27 @@ export const HorizontalScrollStory = ({
             
             {/* Content */}
             <div className="container mx-auto px-8 text-center relative z-10">
-              {/* Large keyword */}
-              <div 
-                className="story-keyword text-8xl md:text-9xl font-black opacity-10 absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 pointer-events-none select-none"
-                style={{ color: frame.color }}
-              >
-                {frame.keyword}
-              </div>
-              
-              {/* Main content */}
-              <div className="relative z-20">
-                <div className="story-title mb-4">
-                  <StaggeredText
-                    text={frame.title}
-                    className="text-4xl md:text-6xl font-bold"
-                    animationType="scale"
-                    stagger={0.1}
-                  />
+              <div className="relative z-20 flex flex-col items-center">
+                {/* Render title only for first frame */}
+                {index === 0 && frame.title && (
+                  <div className="story-title mb-4 mt-8">
+                    <StaggeredText
+                      text={frame.title}
+                      className="text-4xl md:text-6xl font-bold"
+                      animationType="scale"
+                      stagger={0.1}
+                    />
+                  </div>
+                )}
+                {/* Large keyword centered */}
+                <div 
+                  className="story-keyword text-8xl md:text-9xl font-black opacity-10 mb-2 pointer-events-none select-none"
+                  style={{ color: frame.color }}
+                >
+                  {frame.keyword}
                 </div>
-                
-                <div className="story-subtitle mb-6">
+                {/* Subtitle and description below keyword */}
+                <div className="story-subtitle mb-4">
                   <StaggeredText
                     text={frame.subtitle}
                     className="text-xl md:text-2xl text-muted-foreground"
@@ -211,13 +257,11 @@ export const HorizontalScrollStory = ({
                     delay={0.3}
                   />
                 </div>
-                
                 <div className="story-description mb-8 max-w-2xl mx-auto">
                   <p className="text-lg leading-relaxed opacity-80">
                     {frame.description}
                   </p>
                 </div>
-
                 {/* Call to action for last frame */}
                 {index === frames.length - 1 && (
                   <div className="story-cta">
