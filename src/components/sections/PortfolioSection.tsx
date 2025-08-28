@@ -3,6 +3,7 @@ import projectEcommerce from "@/assets/project-ecommerce.jpeg";
 import projectFitness from "@/assets/project-fitness.jpeg";
 import projectDashboard from "@/assets/project-dashboard.jpeg";
 import { useState } from "react";
+import { useIsMobile } from "../../hooks/use-mobile";
 
 const projects = [
   {
@@ -45,6 +46,7 @@ const projects = [
 
 export const PortfolioSection = () => {
   const [selectedProject, setSelectedProject] = useState<null | typeof projects[0]>(null);
+  const isMobile = useIsMobile();
   const closeModal = () => setSelectedProject(null);
   
   return (
@@ -65,7 +67,7 @@ export const PortfolioSection = () => {
           </p>
         </motion.div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+        <div className={`grid ${isMobile ? 'grid-cols-1 gap-6' : 'grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8'}`}>
           {projects.map((project, index) => (
             <motion.div
               key={project.title}

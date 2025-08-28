@@ -1,11 +1,16 @@
 import { useEffect, useState } from 'react';
+import { useMobile } from '@/hooks/useMobile';
 
 export const CustomCursor = () => {
   const [position, setPosition] = useState({ x: 0, y: 0 });
   const [clicked, setClicked] = useState(false);
   const [linkHovered, setLinkHovered] = useState(false);
+  const { isTouchDevice } = useMobile();
   
   useEffect(() => {
+    // Don't run cursor logic on touch devices
+    if (isTouchDevice) return;
+    
     const moveCursor = (e: MouseEvent) => {
       setPosition({ x: e.clientX, y: e.clientY });
     };
@@ -41,7 +46,10 @@ export const CustomCursor = () => {
         el.removeEventListener('mouseleave', removeLinkHover);
       });
     };
-  }, []);
+  }, [isTouchDevice]);
+  
+  // Don't render cursor on touch devices
+  if (isTouchDevice) return null;
   
   return (
     <>

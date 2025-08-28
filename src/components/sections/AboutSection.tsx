@@ -8,6 +8,7 @@ import teamsandeep from "@/assets/team-sandep.jpg";
 import teamMike from "@/assets/team-mike.jpg";
 import { MotionBlurCard } from "@/components/animations/MotionBlurCard";
 import { StaggeredText } from "@/components/animations/StaggeredText";
+import { useMobile } from "@/hooks/useMobile";
 
 const teamMembers = [
   {
@@ -54,7 +55,7 @@ const teamMembers = [
     description: "Our versatile architect, building seamless applications from the database all the way to your screen.",
     image: teamMike,
     linkedinUrl: "https://www.linkedin.com/in/abishek-raj-a2aa39318/",
-  },,
+  },
 
   {
     name: "SAI THARANG",
@@ -72,8 +73,12 @@ export const AboutSection = () => {
   const [scope, animate] = useAnimate();
   const currentIndexRef = useRef(0);
   const intervalRef = useRef(null);
+  const { isMobile } = useMobile();
 
   useEffect(() => {
+    // Skip auto-scroll animation on mobile
+    if (isMobile) return;
+    
     const slider = scope.current;
     if (!slider || slider.children.length === 0) return;
 
@@ -113,7 +118,7 @@ export const AboutSection = () => {
   }, [animate, scope]);
 
   return (
-    <section id="about" className="py-20 sm:py-32 overflow-hidden">
+    <section id="about" className="py-20 sm:py-32 mt-24 overflow-hidden">
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-16 items-center">
           
@@ -140,105 +145,132 @@ export const AboutSection = () => {
           </motion.div>
 
           <div className="relative w-full">
-            <div 
-              ref={scope}
-              className="flex overflow-x-auto space-x-8 py-4"
-              style={{ scrollbarWidth: 'none', '-ms-overflow-style': 'none' }}
-            >
-              {teamMembers.map((member, index) => (
-                <div key={member.name} className="flex-shrink-0">
-                  <MotionBlurCard
-                    delay={index * 0.1}
-                    direction={'up'}
-                    className="p-6 text-center group w-72 h-full"
-                  >
-                    <div className="relative mb-4">
-                      <a
-                        href={member.linkedinUrl}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        aria-label={`${member.name}'s LinkedIn Profile`}
-                        className="cursor-pointer"
+            {isMobile ? (
+              // Mobile: Horizontal scroll layout
+              <div 
+                className="flex overflow-x-auto space-x-6 py-4 px-2 -mx-4 scrollbar-hide"
+                style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
+              >
+                {teamMembers.map((member, index) => (
+                  <div key={member.name} className="flex-shrink-0 w-64">
+                    <MotionBlurCard
+                      delay={index * 0.1}
+                      direction={'up'}
+                      className="p-4 text-center group h-full"
+                    >
+                      <div className="relative mb-4">
+                        <a
+                          href={member.linkedinUrl}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          aria-label={`${member.name}'s LinkedIn Profile`}
+                          className="cursor-pointer"
+                        >
+                          <img
+                            src={member.image}
+                            alt={member.name}
+                            className={`w-20 h-20 rounded-full mx-auto border-4 ${member.color} transform group-hover:scale-110 transition-transform duration-300 object-cover`}
+                          />
+                          <div className="absolute inset-0 w-20 h-20 rounded-full mx-auto bg-gradient-to-r from-primary/20 to-accent/20 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+                        </a>
+                      </div>
+                      <h3 className="text-lg font-bold text-foreground mb-1">
+                        {member.name}
+                      </h3>
+                      <p className={`${member.roleColor} font-semibold mb-3 text-sm`}>
+                        {member.role}
+                      </p>
+                      <p className="text-muted-foreground text-xs leading-relaxed">
+                        {member.description}
+                      </p>
+                    </MotionBlurCard>
+                  </div>
+                ))}
+              </div>
+            ) : (
+              // Desktop: Horizontal scroll layout
+              <>
+                <div 
+                  ref={scope}
+                  className="flex overflow-x-auto space-x-8 py-4"
+                  style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
+                >
+                  {teamMembers.map((member, index) => (
+                    <div key={member.name} className="flex-shrink-0">
+                      <MotionBlurCard
+                        delay={index * 0.1}
+                        direction={'up'}
+                        className="p-6 text-center group w-72 h-full"
                       >
-                        <img
-                          src={member.image}
-                          alt={member.name}
-                          className={`w-24 h-24 rounded-full mx-auto border-4 ${member.color} transform group-hover:scale-110 transition-transform duration-300 object-cover`}
-                        />
-                        <div className="absolute inset-0 w-24 h-24 rounded-full mx-auto bg-gradient-to-r from-primary/20 to-accent/20 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
-                      </a>
+                        <div className="relative mb-4">
+                          <a
+                            href={member.linkedinUrl}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            aria-label={`${member.name}'s LinkedIn Profile`}
+                            className="cursor-pointer"
+                          >
+                            <img
+                              src={member.image}
+                              alt={member.name}
+                              className={`w-24 h-24 rounded-full mx-auto border-4 ${member.color} transform group-hover:scale-110 transition-transform duration-300 object-cover`}
+                            />
+                            <div className="absolute inset-0 w-24 h-24 rounded-full mx-auto bg-gradient-to-r from-primary/20 to-accent/20 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+                          </a>
+                        </div>
+                        <h3 className="text-xl font-bold text-foreground mb-1">
+                          {member.name}
+                        </h3>
+                        <p className={`${member.roleColor} font-semibold mb-3`}>
+                          {member.role}
+                        </p>
+                        <p className="text-muted-foreground text-sm leading-relaxed">
+                          {member.description}
+                        </p>
+                      </MotionBlurCard>
                     </div>
-                    <h3 className="text-xl font-bold text-foreground mb-1">
-                      {member.name}
-                    </h3>
-                    <p className={`${member.roleColor} font-semibold mb-3`}>
-                      {member.role}
-                    </p>
-                    <p className="text-muted-foreground text-sm leading-relaxed">
-                      {member.description}
-                    </p>
-                  </MotionBlurCard>
+                  ))}
                 </div>
-              ))}
-            </div>
-            {/* Symbolic horizontal scroll indicator */}
-            <div className="absolute left-1/2 -translate-x-1/2 -bottom-6 flex items-center justify-center">
-              <svg className="w-12 h-8" viewBox="0 0 48 32" fill="none">
-                <defs>
-                  <linearGradient id="scroll-gradient" x1="0" y1="16" x2="48" y2="16" gradientUnits="userSpaceOnUse">
-                    <stop stopColor="#8B5CF6" />
-                    <stop offset="0.5" stopColor="#06B6D4" />
-                    <stop offset="1" stopColor="#10B981" />
-                  </linearGradient>
-                  <filter id="scroll-glow" x="-4" y="-4" width="56" height="40" filterUnits="userSpaceOnUse">
-                    <feGaussianBlur stdDeviation="3" result="glow" />
-                    <feMerge>
-                      <feMergeNode in="glow" />
-                      <feMergeNode in="SourceGraphic" />
-                    </feMerge>
-                  </filter>
-                </defs>
-                <g filter="url(#scroll-glow)">
-                  {/* Double arrow pattern suggesting horizontal movement */}
-                  <path d="M8 16 L16 16" stroke="url(#scroll-gradient)" strokeWidth="2.5" strokeLinecap="round" />
-                  <path d="M12 12 L16 16 L12 20" stroke="url(#scroll-gradient)" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" />
-                  
-                  <path d="M20 16 L28 16" stroke="url(#scroll-gradient)" strokeWidth="2.5" strokeLinecap="round" />
-                  <path d="M24 12 L28 16 L24 20" stroke="url(#scroll-gradient)" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" />
-                  
-                  <path d="M32 16 L40 16" stroke="url(#scroll-gradient)" strokeWidth="2.5" strokeLinecap="round" />
-                  <path d="M36 12 L40 16 L36 20" stroke="url(#scroll-gradient)" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" />
-                  
-                  {/* Subtle dots indicating more content */}
-                  <circle cx="42" cy="16" r="1.5" fill="url(#scroll-gradient)" opacity="0.7" />
-                  <circle cx="45" cy="16" r="1" fill="url(#scroll-gradient)" opacity="0.5" />
-                </g>
-                <animateTransform attributeName="transform" type="translate" values="0 0; 6 0; 0 0" dur="2s" repeatCount="indefinite" />
-              </svg>
-            </div>
+                {/* Symbolic horizontal scroll indicator - Desktop only */}
+                <div className="absolute left-1/2 -translate-x-1/2 -bottom-6 flex items-center justify-center">
+                  <svg className="w-12 h-8" viewBox="0 0 48 32" fill="none">
+                    <defs>
+                      <linearGradient id="scroll-gradient" x1="0" y1="16" x2="48" y2="16" gradientUnits="userSpaceOnUse">
+                        <stop stopColor="#8B5CF6" />
+                        <stop offset="0.5" stopColor="#06B6D4" />
+                        <stop offset="1" stopColor="#10B981" />
+                      </linearGradient>
+                      <filter id="scroll-glow" x="-4" y="-4" width="56" height="40" filterUnits="userSpaceOnUse">
+                        <feGaussianBlur stdDeviation="3" result="glow" />
+                        <feMerge>
+                          <feMergeNode in="glow" />
+                          <feMergeNode in="SourceGraphic" />
+                        </feMerge>
+                      </filter>
+                    </defs>
+                    <g filter="url(#scroll-glow)">
+                      {/* Double arrow pattern suggesting horizontal movement */}
+                      <path d="M8 16 L16 16" stroke="url(#scroll-gradient)" strokeWidth="2.5" strokeLinecap="round" />
+                      <path d="M12 12 L16 16 L12 20" stroke="url(#scroll-gradient)" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" />
+                      
+                      <path d="M20 16 L28 16" stroke="url(#scroll-gradient)" strokeWidth="2.5" strokeLinecap="round" />
+                      <path d="M24 12 L28 16 L24 20" stroke="url(#scroll-gradient)" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" />
+                      
+                      <path d="M32 16 L40 16" stroke="url(#scroll-gradient)" strokeWidth="2.5" strokeLinecap="round" />
+                      <path d="M36 12 L40 16 L36 20" stroke="url(#scroll-gradient)" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" />
+                      
+                      {/* Subtle dots indicating more content */}
+                      <circle cx="42" cy="16" r="1.5" fill="url(#scroll-gradient)" opacity="0.7" />
+                      <circle cx="45" cy="16" r="1" fill="url(#scroll-gradient)" opacity="0.5" />
+                    </g>
+                    <animateTransform attributeName="transform" type="translate" values="0 0; 6 0; 0 0" dur="2s" repeatCount="indefinite" />
+                  </svg>
+                </div>
+              </>
+            )}
           </div>
         </div>
       </div>
     </section>
   );
 };
-/*Implement the following:
-
-🌟 Features:
-
-Hero: Floating particles with mouse-following glow
-About: Rotating geometric shapes in brand colors
-Services: Matrix-style code rain effect
-Portfolio: Gradient waves with floating orbs
-Contact: Animated network connections
-🔄 Smooth Transitions:
-
-1.2-second fade transitions between backgrounds
-IntersectionObserver detects section changes
-No jarring background switches
-🎨 Visual Appeal:
-
-Each background matches section content
-Subtle animations that don't distract
-Consistent brand colors throughout
-The backgrounds will automatically transition as you scroll between sections. */

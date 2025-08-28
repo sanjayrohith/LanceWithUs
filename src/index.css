@@ -300,3 +300,72 @@ body {
   border-color: hsl(var(--primary));
   border-width: 3px;
 }
+
+/* Mobile Optimizations */
+@media (max-width: 768px) {
+  /* Improved touch targets */
+  button, a, [role="button"] {
+    min-height: 44px;
+    min-width: 44px;
+  }
+
+  /* Better text scaling */
+  .text-4xl {
+    font-size: 2rem;
+    line-height: 2.5rem;
+  }
+
+  .text-3xl {
+    font-size: 1.75rem;
+    line-height: 2.25rem;
+  }
+
+  /* Reduced motion for mobile devices */
+  @media (prefers-reduced-motion: reduce) {
+    * {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+    }
+  }
+
+  /* Mobile-specific spacing */
+  .container {
+    padding-left: 1rem;
+    padding-right: 1rem;
+  }
+
+  /* Mobile modal adjustments */
+  .modal-mobile {
+    margin: 1rem;
+    max-height: 80vh;
+    overflow-y: auto;
+  }
+
+  /* Navigation improvements */
+  nav button {
+    min-height: 44px;
+    padding: 0.5rem 0.75rem;
+  }
+}
+
+/* High DPI displays */
+@media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) {
+  .cursor-dot, .cursor-ring {
+    will-change: transform;
+  }
+}
+
+/* Dark mode optimizations for mobile */
+@media (max-width: 768px) and (prefers-color-scheme: dark) {
+  /* Ensure proper contrast on mobile devices */
+  .text-muted-foreground {
+    color: hsl(215 20% 75%);
+  }
+  
+  /* Improve glassmorphism visibility on mobile */
+  .backdrop-blur-lg {
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+  }
+}

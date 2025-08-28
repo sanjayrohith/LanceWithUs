@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { X } from "lucide-react";
+import { useIsMobile } from "../hooks/use-mobile";
 
 // --- Custom SVG Icon Components ---
 // Connection Icon: Two interlocking rings to symbolize connection
@@ -45,12 +46,13 @@ const DiscordIcon = ({ className }) => (
 
 export const FloatingChat = () => {
   const [isPopupOpen, setIsPopupOpen] = useState(false);
+  const isMobile = useIsMobile();
 
   const contactLinks = [
-    { icon: <EmailIcon className="w-7 h-7 text-purple-400" />, label: "Email", subtext: "lancewithus@gmail.com", href: "mailto:lancewithus@gmail.com" },
-    { icon: <LinkedInIcon className="w-7 h-7 text-blue-500" />, label: "LinkedIn", subtext: "Connect professionally", href: "https://www.linkedin.com/company/108362982/admin/dashboard/" },
-    { icon: <WhatsAppIcon className="w-7 h-7 text-green-400" />, label: "WhatsApp", subtext: "Chat with me directly", href: "https://wa.me/8675478573" },
-    { icon: <DiscordIcon className="w-7 h-7 text-indigo-400" />, label: "Discord", subtext: "Let's chat in a community", href: "https://discord.com/users/your-user-id" },
+    { icon: <EmailIcon className="w-6 h-6 sm:w-7 sm:h-7 text-purple-400" />, label: "Email", subtext: "lancewithus@gmail.com", href: "mailto:lancewithus@gmail.com" },
+    { icon: <LinkedInIcon className="w-6 h-6 sm:w-7 sm:h-7 text-blue-500" />, label: "LinkedIn", subtext: "Connect professionally", href: "https://www.linkedin.com/company/108362982/admin/dashboard/" },
+    { icon: <WhatsAppIcon className="w-6 h-6 sm:w-7 sm:h-7 text-green-400" />, label: "WhatsApp", subtext: "Chat with me directly", href: "https://wa.me/8675478573" },
+    { icon: <DiscordIcon className="w-6 h-6 sm:w-7 sm:h-7 text-indigo-400" />, label: "Discord", subtext: "Let's chat in a community", href: "https://discord.com/users/your-user-id" },
   ];
 
   return (
@@ -58,10 +60,10 @@ export const FloatingChat = () => {
       {/* Modern Colorful Connection Button */}
       <button
         onClick={() => setIsPopupOpen(true)}
-        className="fixed bottom-5 right-5 w-16 h-16 rounded-full flex items-center justify-center z-40 shadow-xl bg-gradient-to-tr from-pink-400 via-blue-400 to-green-400 animate-gradient-move border-4 border-white/30 hover:scale-110 transition-transform duration-300"
+        className={`fixed bottom-5 right-5 ${isMobile ? 'w-14 h-14' : 'w-16 h-16'} rounded-full flex items-center justify-center z-40 shadow-xl bg-gradient-to-tr from-pink-400 via-blue-400 to-green-400 animate-gradient-move border-4 border-white/30 hover:scale-110 transition-transform duration-300`}
         style={{ boxShadow: "0 0 24px 6px rgba(59,130,246,0.3), 0 0 48px 12px rgba(236,72,153,0.2)" }}
       >
-        <ConnectionIcon className="w-10 h-10" />
+        <ConnectionIcon className={isMobile ? "w-8 h-8" : "w-10 h-10"} />
       </button>
 
       {/* This section renders the popup when isPopupOpen is true */}
@@ -72,23 +74,23 @@ export const FloatingChat = () => {
         >
           {/* --- GLASSMORPHISM MODAL --- */}
           <div
-            className="bg-white/10 backdrop-blur-lg border border-white/20 rounded-2xl shadow-xl w-full max-w-md p-6 space-y-4 mx-4 text-white"
+            className={`bg-white/10 backdrop-blur-lg border border-white/20 rounded-2xl shadow-xl w-full ${isMobile ? 'max-w-sm mx-4 p-4' : 'max-w-md p-6'} space-y-4 text-white`}
             onClick={(e) => e.stopPropagation()}
           >
             <div className="text-center">
-              <h2 className="text-2xl font-bold">Questions, feedback, or collaboration?</h2>
+              <h2 className={`${isMobile ? 'text-xl' : 'text-2xl'} font-bold`}>Questions, feedback, or collaboration?</h2>
               <p className="text-white/70 mt-1">Feel free to reach out!</p>
             </div>
             
-            <div className="space-y-3 pt-4">
+            <div className={`space-y-3 ${isMobile ? 'pt-2' : 'pt-4'}`}>
               {contactLinks.map((link) => (
-                <a key={link.label} href={link.href} target="_blank" rel="noopener noreferrer" className="flex items-center p-3 bg-white/5 rounded-xl hover:bg-white/20 border border-transparent hover:border-white/20 transition-all duration-200 group">
-                  <div className="flex-shrink-0 h-12 w-12 flex items-center justify-center rounded-full bg-white/10 group-hover:scale-110 transition-transform duration-200">
+                <a key={link.label} href={link.href} target="_blank" rel="noopener noreferrer" className={`flex items-center ${isMobile ? 'p-2' : 'p-3'} bg-white/5 rounded-xl hover:bg-white/20 border border-transparent hover:border-white/20 transition-all duration-200 group`}>
+                  <div className={`flex-shrink-0 ${isMobile ? 'h-10 w-10' : 'h-12 w-12'} flex items-center justify-center rounded-full bg-white/10 group-hover:scale-110 transition-transform duration-200`}>
                     {link.icon}
                   </div>
-                  <div className="ml-4 flex-grow">
-                    <p className="font-semibold">{link.label}</p>
-                    <p className="text-sm text-white/60 truncate">{link.subtext}</p>
+                  <div className={`${isMobile ? 'ml-3' : 'ml-4'} flex-grow`}>
+                    <p className={`font-semibold ${isMobile ? 'text-sm' : ''}`}>{link.label}</p>
+                    <p className={`${isMobile ? 'text-xs' : 'text-sm'} text-white/60 truncate`}>{link.subtext}</p>
                   </div>
                 </a>
               ))}

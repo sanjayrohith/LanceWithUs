@@ -4,6 +4,7 @@ import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { cn } from '@/lib/utils';
 import { StaggeredText } from './StaggeredText';
 import { MagneticButton } from './MagneticButton';
+import { useMobile } from '@/hooks/useMobile';
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -27,8 +28,12 @@ export const HorizontalScrollStory = ({
   const containerRef = useRef<HTMLDivElement>(null);
   const scrollRef = useRef<HTMLDivElement>(null);
   const sparkleCanvasRef = useRef<HTMLCanvasElement>(null);
+  const { isMobile } = useMobile();
 
   useEffect(() => {
+    // Skip complex animations on mobile
+    if (isMobile) return;
+    
     // Pure Canvas sparkle animation
     const canvas = sparkleCanvasRef.current;
     if (canvas) {
@@ -201,98 +206,166 @@ export const HorizontalScrollStory = ({
   };
 
   return (
-    <div
-      ref={containerRef}
-      className={cn("relative overflow-hidden", className)}
-      style={{ height: "100vh" }}
-    >
-      {/* White sparkles background animation */}
-      <canvas ref={sparkleCanvasRef} className="absolute inset-0 w-full h-full z-0 pointer-events-none" />
-      <div
-        ref={scrollRef}
-        className="flex items-center h-full"
-        style={{ width: `${frames.length * 100}vw` }}
-      >
-        {frames.map((frame, index) => (
-          <div
-            key={index}
-            className="story-frame flex-shrink-0 w-screen h-full flex items-center justify-center relative"
-          >
-            {/* Background gradient based on frame color */}
-            <div 
-              className="absolute inset-0 opacity-20"
-              style={{
-                background: `radial-gradient(circle at center, ${frame.color}40, transparent 70%)`
-              }}
-            />
-            
-            {/* Content */}
-            <div className="container mx-auto px-8 text-center relative z-10">
-              <div className="relative z-20 flex flex-col items-center">
-                {/* Render title only for first frame */}
+    <>
+      {isMobile ? (
+        // Mobile vertical layout
+        <div className="mobile-story-container py-12 px-4">
+          {frames.map((frame, index) => (
+            <div
+              key={`mobile-frame-${frame.keyword}`}
+              className="mobile-story-frame mb-12 last:mb-0"
+            >
+              {/* Background gradient for mobile */}
+              <div 
+                className="relative bg-white/5 backdrop-blur-lg rounded-3xl p-6 border border-white/10"
+                style={{
+                  background: `linear-gradient(135deg, ${frame.color}20, transparent 70%)`
+                }}
+              >
+                {/* Title for first frame only */}
                 {index === 0 && frame.title && (
-                  <div className="story-title mb-4 mt-8">
-                    <StaggeredText
-                      text={frame.title}
-                      className="text-4xl md:text-6xl font-bold"
-                      animationType="scale"
-                      stagger={0.1}
-                    />
+                  <div className="mb-4">
+                    <h2 className="text-2xl md:text-3xl font-bold text-center">
+                      {frame.title}
+                    </h2>
                   </div>
                 )}
-                {/* Large keyword centered */}
+                
+                {/* Keyword */}
                 <div 
-                  className="story-keyword text-8xl md:text-9xl font-black opacity-10 mb-2 pointer-events-none select-none"
+                  className="text-4xl md:text-5xl font-black text-center mb-3 opacity-80"
                   style={{ color: frame.color }}
                 >
                   {frame.keyword}
                 </div>
-                {/* Subtitle and description below keyword */}
-                <div className="story-subtitle mb-4">
-                  <StaggeredText
-                    text={frame.subtitle}
-                    className="text-xl md:text-2xl text-muted-foreground"
-                    animationType="slide"
-                    stagger={0.05}
-                    delay={0.3}
-                  />
-                </div>
-                <div className="story-description mb-8 max-w-2xl mx-auto">
-                  <p className="text-lg leading-relaxed opacity-80">
-                    {frame.description}
-                  </p>
-                </div>
-                {/* Call to action for last frame */}
+                
+                {/* Subtitle */}
+                <h3 className="text-lg md:text-xl font-semibold text-center mb-3 text-muted-foreground">
+                  {frame.subtitle}
+                </h3>
+                
+                {/* Description */}
+                <p className="text-sm md:text-base leading-relaxed text-center opacity-80">
+                  {frame.description}
+                </p>
+                
+                {/* CTA for last frame */}
                 {index === frames.length - 1 && (
-                  <div className="story-cta">
-                    <MagneticButton
-                      variant="primary"
+                  <div className="mt-6 flex flex-col sm:flex-row gap-4 justify-center">
+                    <button
                       onClick={() => scrollToSection('about')}
-                      className="mr-4"
+                      className="px-6 py-3 bg-primary text-primary-foreground rounded-lg font-semibold hover:bg-primary/90 transition-colors"
                     >
                       Explore Our Work
-                    </MagneticButton>
-                    <MagneticButton
-                      variant="glass"
+                    </button>
+                    <button
                       onClick={() => scrollToSection('contact')}
+                      className="px-6 py-3 bg-white/10 backdrop-blur-lg border border-white/20 rounded-lg font-semibold hover:bg-white/20 transition-colors"
                     >
                       Start Your Project
-                    </MagneticButton>
+                    </button>
                   </div>
                 )}
               </div>
             </div>
-          </div>
-        ))}
-      </div>
-      
-      {/* Scroll indicator */}
-      <div className="absolute bottom-8 left-1/2 transform -translate-x-1/2 text-center flex flex-col items-center">
-        <p className="text-sm text-muted-foreground mb-2">Scroll to explore</p>
-        <div className="w-6 h-10 border border-white/30 rounded-full flex justify-center items-start">
-          <div className="w-1 h-3 bg-white/60 rounded-full mt-2 animate-bounce" />
+          ))}
         </div>
-      </div>
-    </div>
+      ) : (
+        // Desktop horizontal scroll layout
+        <div
+          ref={containerRef}
+          className={cn("relative overflow-hidden", className)}
+          style={{ height: "100vh" }}
+        >
+          {/* White sparkles background animation */}
+          <canvas ref={sparkleCanvasRef} className="absolute inset-0 w-full h-full z-0 pointer-events-none" />
+          <div
+            ref={scrollRef}
+            className="flex items-center h-full"
+            style={{ width: `${frames.length * 100}vw` }}
+          >
+            {frames.map((frame, index) => (
+              <div
+                key={`desktop-frame-${frame.keyword}`}
+                className="story-frame flex-shrink-0 w-screen h-full flex items-center justify-center relative"
+              >
+                {/* Background gradient based on frame color */}
+                <div 
+                  className="absolute inset-0 opacity-20"
+                  style={{
+                    background: `radial-gradient(circle at center, ${frame.color}40, transparent 70%)`
+                  }}
+                />
+                
+                {/* Content */}
+                <div className="container mx-auto px-8 text-center relative z-10">
+                  <div className="relative z-20 flex flex-col items-center">
+                    {/* Render title only for first frame */}
+                    {index === 0 && frame.title && (
+                      <div className="story-title mb-4 mt-8">
+                        <StaggeredText
+                          text={frame.title}
+                          className="text-4xl md:text-6xl font-bold"
+                          animationType="scale"
+                          stagger={0.1}
+                        />
+                      </div>
+                    )}
+                    {/* Large keyword centered */}
+                    <div 
+                      className="story-keyword text-8xl md:text-9xl font-black opacity-10 mb-2 pointer-events-none select-none"
+                      style={{ color: frame.color }}
+                    >
+                      {frame.keyword}
+                    </div>
+                    {/* Subtitle and description below keyword */}
+                    <div className="story-subtitle mb-4">
+                      <StaggeredText
+                        text={frame.subtitle}
+                        className="text-xl md:text-2xl text-muted-foreground"
+                        animationType="slide"
+                        stagger={0.05}
+                        delay={0.3}
+                      />
+                    </div>
+                    <div className="story-description mb-8 max-w-2xl mx-auto">
+                      <p className="text-lg leading-relaxed opacity-80">
+                        {frame.description}
+                      </p>
+                    </div>
+                    {/* Call to action for last frame */}
+                    {index === frames.length - 1 && (
+                      <div className="story-cta">
+                        <MagneticButton
+                          variant="primary"
+                          onClick={() => scrollToSection('about')}
+                          className="mr-4"
+                        >
+                          Explore Our Work
+                        </MagneticButton>
+                        <MagneticButton
+                          variant="glass"
+                          onClick={() => scrollToSection('contact')}
+                        >
+                          Start Your Project
+                        </MagneticButton>
+                      </div>
+                    )}
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+          
+          {/* Scroll indicator */}
+          <div className="absolute bottom-8 left-1/2 transform -translate-x-1/2 text-center flex flex-col items-center">
+            <p className="text-sm text-muted-foreground mb-2">Scroll to explore</p>
+            <div className="w-6 h-10 border border-white/30 rounded-full flex justify-center items-start">
+              <div className="w-1 h-3 bg-white/60 rounded-full mt-2 animate-bounce" />
+            </div>
+          </div>
+        </div>
+      )}
+    </>
   );
 };
