@@ -23,7 +23,7 @@ const Index = () => {
 
       <footer className="bg-background/30 border-t border-white/10">
         <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-6 text-center text-muted-foreground">
-          <p>&copy; 2024 LanceWithUs. All rights reserved. Built by students, for the future.</p>
+          <p>&copy; 2025 LanceWithUs. All rights reserved. Code, Craft, Care . Driven by passion, powered by skill.</p>
         </div>
       </footer>
 
