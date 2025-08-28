@@ -129,6 +129,7 @@ export const AboutSection = () => {
             viewport={{ once: true }}
             className="text-center lg:text-left"
           >
+            <div className="block sm:hidden h-40"></div>
             <h2 className="text-3xl md:text-4xl font-bold text-foreground">
               <StaggeredText text="From " delay={0.2} animationType="slide" />
               <span className="text-primary">
