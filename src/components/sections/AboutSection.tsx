@@ -21,10 +21,10 @@ const teamMembers = [
   },
    {
     name: "SANDEEP KUMAR",
-    role: "AI & ML Specialist",
+    role: "Backend Cloud Architect",
     color: "border-stellar-pink/50",
     roleColor: "text-stellar-pink",
-    description: "Our resident genius, teaching machines to think so you don't have to.",
+    description: "Turning complex backend puzzles into smooth, cloud-powered solutions.",
     image: teamsandeep,
     linkedinUrl: "https://www.linkedin.com/in/sandeep-kumaar-12a00731a?utm_source=share&utm_campaign=share_via&utm_content=profile&utm_medium=android_app",
   },
