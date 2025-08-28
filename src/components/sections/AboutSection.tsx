@@ -118,7 +118,7 @@ export const AboutSection = () => {
   }, [animate, scope]);
 
   return (
-    <section id="about" className="py-20 sm:py-32 mt-24 overflow-hidden">
+    <section id="about" className="py-20 sm:py-32 mt-48 sm:mt-56 md:mt-32 overflow-hidden">
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-16 items-center">
           
