@@ -30,7 +30,7 @@ const storyFrames = [
     subtitle: "Built to Last and Scale",
     description: "Enterprise-grade solutions with robust architecture, ensuring your digital presence grows with your business.",
     keyword: "RELIABLE",
-    color: "hsl(var(--stellar-green))"
+    color: "#ef4444"
   }
 ];
 
