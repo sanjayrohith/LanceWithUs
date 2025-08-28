@@ -7,7 +7,7 @@ const steps = [
   {
     number: 1,
     title: "Discovery",
-    description: "We start by understanding your vision, goals, and requirements in detail, aligning everything before moving forward.",
+    description: "The discovery phase is where our journey begins. We take time to understand your vision, goals, and specific requirements in depth. Through discussions, research, and careful analysis, we uncover core challenges and opportunities. This step ensures we are aligned on priorities, creating a strong foundation that guides the project forward with clarity and purpose.",
     color: "from-indigo-500 to-purple-500",
     icon: Lightbulb,
   },
@@ -21,7 +21,7 @@ const steps = [
   {
     number: 3,
     title: "Development",
-    description: "Our expert team begins coding with precision, ensuring clean, scalable, and efficient development practices.",
+    description: "Once the foundation is set, our team brings ideas to life through precise coding and robust implementation. We focus on clean, scalable, efficient practices that ensure long-term performance and adaptability. Every feature is built with attention to detail, tested rigorously, and aligned with standards. This stage transforms vision into a working solution, ensuring reliability and future-ready technology.",
     color: "from-green-400 to-teal-500",
     icon: Code,
   },
