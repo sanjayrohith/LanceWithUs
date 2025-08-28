@@ -1,9 +1,9 @@
 import { motion, useAnimate } from "framer-motion";
 import { useEffect, useRef } from "react";
-import teamAlex from "@/assets/team-alex.jpg";
+import teamshesh from "@/assets/team-shesh.jpeg";
 import teamrohit from "@/assets/team-rohith.jpeg"
-import teamsanjay from "@/assets/team-sanjay.jpg";
-
+import teamsanjay from "@/assets/team-sanjay.jpg"; // Re-using this as a placeholder
+import teamsai from  "@/assets/team-sai.jpeg";
 import teamsandeep from "@/assets/team-sandep.jpg";
 import teamMike from "@/assets/team-mike.jpg";
 import { MotionBlurCard } from "@/components/animations/MotionBlurCard";
@@ -19,16 +19,7 @@ const teamMembers = [
     image: teamrohit,
     linkedinUrl: "https://www.linkedin.com/in/sanjayrohith18/",
   },
-  {
-    name: "SANJAY E",
-    role: "DATA ENGINEER",
-    color: "border-accent/50",
-    roleColor: "text-accent",
-    description: "Pixel-perfect visionary who makes our solutions not just functional, but beautiful.",
-    image: teamsanjay,
-    linkedinUrl: "https://www.linkedin.com/in/sanjayelango06/",
-  },
-  {
+   {
     name: "SANDEEP KUMAR",
     role: "AI & ML Specialist",
     color: "border-stellar-pink/50",
@@ -38,14 +29,43 @@ const teamMembers = [
     linkedinUrl: "https://www.linkedin.com/in/sandeep-kumaar-12a00731a?utm_source=share&utm_campaign=share_via&utm_content=profile&utm_medium=android_app",
   },
   {
+    name: "SANJAY E",
+    role: "Data & AI Engineer",
+    color: "border-accent/50",
+    roleColor: "text-accent",
+    description: "Engineer blending data and AI to design smart, scalable solutions that bring value to every project.",
+    image: teamsanjay,
+    linkedinUrl: "https://www.linkedin.com/in/sanjayelango06/",
+  },
+  {
+    name: "SHESAKANTH RA",
+    role: "Frontend Developer & UI/UX",
+    color: "border-accent/50",
+    roleColor: "text-accent",
+    description: "Crafting intuitive and beautiful user interfaces that bring our applications to life.",
+    image: teamshesh,
+    linkedinUrl: "#", 
+  },
+  {
     name: "Abishek Raj",
-    role: "AI & ML Specialist",
+    role: "Full Stack Developer",
     color: "border-stellar-pink/50",
     roleColor: "text-stellar-pink",
-    description: "Our resident genius, teaching machines to think so you don't have to.",
+    description: "Our versatile architect, building seamless applications from the database all the way to your screen.",
     image: teamMike,
     linkedinUrl: "https://www.linkedin.com/in/abishek-raj-a2aa39318/",
-  }
+  },,
+
+  {
+    name: "SAI THARANG",
+    role: "FINANCIAL ANALYST",
+    color: "border-emerald-500/50",
+    roleColor: "text-emerald-500",
+    description: "Analyzing financial data to guide strategic decisions and ensure sustainable growth.",
+    image: teamsai, 
+    linkedinUrl: "https://www.linkedin.com/in/sai-tharang-mahesh-558b07207/", 
+  },
+
 ];
 
 export const AboutSection = () => {
