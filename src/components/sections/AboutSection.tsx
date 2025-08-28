@@ -2,7 +2,8 @@ import { motion, useAnimate } from "framer-motion";
 import { useEffect, useRef } from "react";
 import teamAlex from "@/assets/team-alex.jpg";
 import teamrohit from "@/assets/team-rohith.jpeg"
-import teamSamantha from "@/assets/team-samantha.jpg";
+import teamsanjay from "@/assets/team-sanjay.jpg";
+
 import teamsandeep from "@/assets/team-sandep.jpg";
 import teamMike from "@/assets/team-mike.jpg";
 import { MotionBlurCard } from "@/components/animations/MotionBlurCard";
@@ -24,7 +25,7 @@ const teamMembers = [
     color: "border-accent/50",
     roleColor: "text-accent",
     description: "Pixel-perfect visionary who makes our solutions not just functional, but beautiful.",
-    image: teamSamantha,
+    image: teamsanjay,
     linkedinUrl: "https://www.linkedin.com/in/sanjayelango06/",
   },
   {
