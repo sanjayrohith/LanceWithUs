@@ -31,7 +31,7 @@ export const HorizontalScrollStory = ({
   const { isMobile } = useMobile();
 
   useEffect(() => {
-    // Skip complex animations on mobile
+    // Skip ALL scroll animations and effects on mobile
     if (isMobile) return;
     
     // Pure Canvas sparkle animation
@@ -94,6 +94,8 @@ export const HorizontalScrollStory = ({
         canvas.height = height;
       });
     }
+    
+    // Only run scroll animations on desktop
     if (!containerRef.current || !scrollRef.current) return;
 
     const container = containerRef.current;
@@ -196,7 +198,7 @@ export const HorizontalScrollStory = ({
     return () => {
       ScrollTrigger.getAll().forEach(trigger => trigger.kill());
     };
-  }, [frames]);
+  }, [frames, isMobile]); // Add isMobile to dependencies
 
   const scrollToSection = (sectionId: string) => {
     const element = document.getElementById(sectionId);
@@ -208,8 +210,8 @@ export const HorizontalScrollStory = ({
   return (
     <>
       {isMobile ? (
-        // Mobile vertical layout
-        <div className="mobile-story-container py-12 px-4">
+        // Mobile vertical layout - no fixed height, allows natural scrolling
+        <div className="mobile-story-container py-12 px-4 min-h-screen">
           {frames.map((frame, index) => (
             <div
               key={`mobile-frame-${frame.keyword}`}
