@@ -45,7 +45,7 @@ const teamMembers = [
     roleColor: "text-accent",
     description: "Crafting intuitive and beautiful user interfaces that bring our applications to life.",
     image: teamshesh,
-    linkedinUrl: "#", 
+    linkedinUrl: "https://www.linkedin.com/in/sheshakanth-ra-3151a6329", 
   },
   {
     name: "Abishek Raj",
