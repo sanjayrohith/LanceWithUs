@@ -117,7 +117,7 @@ export const ProcessSection = () => {
   }, []);
 
   return (
-    <section id="process" className="py-20 sm:py-32 bg-background/20 overflow-hidden">
+  <section id="process" className="py-16 sm:py-32 bg-background/20 overflow-hidden">
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
         <motion.div
           initial={{ opacity: 0, y: 20 }}

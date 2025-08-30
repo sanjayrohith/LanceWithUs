@@ -337,7 +337,7 @@ export const HorizontalScrollStory = ({
                     </div>
                     {/* Call to action for last frame */}
                     {index === frames.length - 1 && (
-                      <div className="story-cta">
+                      <div className="story-cta mb-[10rem] sm:mb-0">
                         <MagneticButton
                           variant="primary"
                           onClick={() => scrollToSection('about')}

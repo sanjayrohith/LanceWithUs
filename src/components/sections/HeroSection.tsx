@@ -45,9 +45,11 @@ export const HeroSection = () => {
   return (
     <>
       {/* Add top padding to account for fixed navigation */}
-      <div className="pt-24">
+  <div className="pt-24 pb-10 sm:pb-0">
         {/* Horizontal Scroll Story - Primary Hero Experience */}
-        <HorizontalScrollStory frames={storyFrames} />
+        <div className="max-w-full overflow-x-hidden">
+          <HorizontalScrollStory frames={storyFrames} />
+        </div>
       
       {/* Traditional Hero as backup - can be removed if horizontal scroll works well */}
       <section

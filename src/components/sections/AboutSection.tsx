@@ -118,7 +118,7 @@ export const AboutSection = () => {
   }, [animate, scope]);
 
   return (
-    <section id="about" className="py-20 sm:py-32 mt-48 sm:mt-56 md:mt-32 overflow-hidden">
+  <section id="about" className="py-[1.5rem] sm:py-[4.5rem] mt-32 sm:mt-56 md:mt-32 overflow-hidden z-0">
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-16 items-center">
           
@@ -129,8 +129,7 @@ export const AboutSection = () => {
             viewport={{ once: true }}
             className="text-center lg:text-left"
           >
-            <div className="block sm:hidden h-40"></div>
-            <h2 className="text-3xl md:text-4xl font-bold text-foreground">
+            <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold text-foreground mt-12 sm:mt-0">
               <StaggeredText text="From " delay={0.2} animationType="slide" />
               <span className="text-primary">
                 <StaggeredText text="Vision" delay={0.4} animationType="scale" />
