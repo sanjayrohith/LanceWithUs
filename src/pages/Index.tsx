@@ -6,10 +6,18 @@ import { PortfolioSection } from "@/components/sections/PortfolioSection";
 import { ProcessSection } from "@/components/sections/ProcessSection";
 import { ContactSection } from "@/components/sections/ContactSection";
 import { FloatingChat } from "@/components/FloatingChat";
+import SEOHead from "@/components/SEOHead";
 
 const Index = () => {
   return (
-    <div className="min-h-screen bg-background text-foreground">
+    <>
+      <SEOHead 
+        title="Professional Freelance Development Team"
+        description="LanceWithUs: Expert freelance developers specializing in React, TypeScript, AI integration, mobile development & modern web solutions. Get quality results at competitive rates."
+        keywords="freelance developers, web development, React developers, TypeScript, AI integration, mobile development, UI/UX design, Next.js, Node.js, professional development team"
+      />
+      
+      <div className="min-h-screen bg-background text-foreground">
       <Navigation />
       
       <main>
@@ -28,7 +36,8 @@ const Index = () => {
       </footer>
 
       <FloatingChat />
-    </div>
+      </div>
+    </>
   );
 };
 
