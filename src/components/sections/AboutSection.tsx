@@ -39,7 +39,7 @@ const teamMembers = [
     linkedinUrl: "https://www.linkedin.com/in/sanjayelango06/",
   },
   {
-    name: "SHESAKANTH RA",
+    name: "SHESHAKANTH RA",
     role: "Frontend Developer & UI/UX",
     color: "border-accent/50",
     roleColor: "text-accent",
