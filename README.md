@@ -1,7 +1,10 @@
 # LanceWithUs - Professional Freelance Development Team
 
 <div align="center">
-  <img src="./public/favicon.ico" alt="LanceWithUs Logo" width="64" height="64">
+  <!-- Screenshots -->
+  <img src="./public/screenshots/landing-hero.png" alt="LanceWithUs Landing Page" width="1000">
+  <br/>
+  <img src="./public/screenshots/contact-modal.png" alt="Contact Modal Screenshot" width="1000">
   
   **Building exceptional digital experiences with cutting-edge technology**
   
